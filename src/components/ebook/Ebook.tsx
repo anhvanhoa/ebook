@@ -1,0 +1,32 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+
+type EbookProps = {
+    title: string;
+    slug: string;
+    category: string;
+    image: string;
+};
+
+const Ebook = ({ category, image, slug, title }: EbookProps) => {
+    return (
+        <Link href={`/${slug}`} className='flex items-center justify-center flex-col group'>
+            <div className='rounded-md bg-gray-50 p-1.5'>
+                <Image
+                    className='aspect-[4/6] object-cover rounded-md grayscale hover:grayscale-50 duration-500 transition'
+                    src={image}
+                    width={180}
+                    height={300}
+                    alt={title}
+                />
+            </div>
+            <div className='px-2 py-2 text-center'>
+                <h2 className='line-clamp-1 group-hover:underline underline-offset-1 decoration-1'>{title}</h2>
+                <p className='text-sm italic'>{category}</p>
+            </div>
+        </Link>
+    );
+};
+
+export default Ebook;
