@@ -30,7 +30,7 @@ const EbookPage = async () => {
                     </Button>
                 </div>
             </div>
-            <PdfViewer fileUrl={'/e.pdf'} />
+            <PdfViewer fileUrl={'/advanced-go-book.pdf'} />
         </div>
     );
 };

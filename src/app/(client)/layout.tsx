@@ -1,3 +1,4 @@
+// import 'core-js/full/promise/with-resolvers'
 import React from 'react';
 import Categories from './_components/Categories';
 import Footer from './_components/Footer';
@@ -8,7 +9,7 @@ type LayoutClientProps = {
 
 const LayoutClient = ({ children }: LayoutClientProps) => {
     return (
-        <div className='text-gray-700 selection:bg-[#FAF3E0]'>
+        <div className='text-gray-700'>
             <Categories />
             {children}
             <Footer />
