@@ -1,59 +1,42 @@
 'use client';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css'; // Ẩn lớp chọn văn bản
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'; // Ẩn chú thích
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString();
+import { EbookContext } from '../page';
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
 
 const options = {
     cMapUrl: '/cmaps/',
     standardFontDataUrl: '/standard_fonts/'
 };
 
-type PageSider = {
-    pageOdds: number[];
-    pageEvens: number[];
-};
+type PageSider = number[];
 
-const PdfViewer = ({ fileUrl }: { fileUrl: string }) => {
-    const [pageSlide, setPageSlide] = useState<PageSider>({ pageOdds: [], pageEvens: [] });
+const PdfViewer = () => {
+    const pdt = useContext(EbookContext);
+    const [scale] = useDebounce(pdt.state.scale, 200);
+    const [pageSlide, setPageSlide] = useState<PageSider>([]);
     function onDocumentLoadSuccess({ numPages: nextNumPages }: { numPages: number }) {
-        const slider = Array.from({ length: nextNumPages }, (_, i) => i).reduce<PageSider>(
-            (acc, el) => {
-                if (el % 2 === 0) {
-                    acc.pageOdds.push(el);
-                } else {
-                    acc.pageEvens.push(el);
-                }
-                return acc;
-            },
-            {
-                pageOdds: [],
-                pageEvens: []
-            }
-        );
+        const slider = Array.from({ length: nextNumPages }, (_, i) => i + 1);
         setPageSlide(slider);
     }
     return (
         <div>
-            <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess} options={options}>
-                {pageSlide.pageOdds.length > 0 &&
-                    pageSlide.pageOdds.map((el) => (
-                        <div key={`page_${el + 1}`} className={'grid grid-cols-1 ' + el}>
-                            <Page
-                                pageNumber={el + 1}
-                                className='*:!w-full *:!h-full'
-                                width={512}
-                                scale={2}
-                            />
-                            <Page
-                                pageNumber={el + 2}
-                                className='*:!w-full *:!h-full'
-                                width={512}
-                                scale={2}
-                            />
-                        </div>
-                    ))}
+            <Document file={pdt.state.fileUrl} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+                {pageSlide.map((el) => (
+                    <div key={`page_${el}`}>
+                        <Page
+                            devicePixelRatio={2}
+                            className={'*:!mx-auto'}
+                            pageNumber={el}
+                            width={pdt.state.width}
+                            height={pdt.state.height}
+                            scale={scale}
+                        />
+                    </div>
+                ))}
             </Document>
         </div>
     );
