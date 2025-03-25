@@ -1,6 +1,5 @@
 'use client';
-import React from 'react';
-import { useDebounce } from 'use-debounce';
+import React, { memo, useMemo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css'; // Ẩn lớp chọn văn bản
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'; // Ẩn chú thích
@@ -16,34 +15,42 @@ const options = {
 
 const PdfViewer = () => {
     const pdt = usePdf();
-    const [scale] = useDebounce(pdt.state.scale, 200);
     function onDocumentLoadSuccess(e: { numPages: number }) {
         console.log(e);
         pdt.setState({ ...pdt.state, totalPages: e.numPages });
     }
-    const pageSlide = Array.from({ length: pdt.state.totalPages }, (_, i) => i + 1);
+    const pageSlide = useMemo(
+        () => Array.from({ length: pdt.state.totalPages }, (_, i) => i + 1),
+        [pdt.state.totalPages]
+    );
     return (
         <Document
             file={pdt.state.fileUrl}
             onLoadSuccess={onDocumentLoadSuccess}
             options={options}
             loading={<Loading />}
-            className={'grid grid-cols-2'}
+            className={cn('grid', {
+                'grid-cols-[auto_auto]': pdt.state.viewMode === 'double'
+            })}
         >
             {pageSlide.map((el) => (
                 <Page
+                
                     key={`page_${el}`}
                     loading={<Loading />}
                     devicePixelRatio={2}
-                    className={cn('*:!mx-auto transition-all w-full')}
+                    className={cn('flex transition-all w-full', {
+                        'justify-end': pdt.state.viewMode === 'double' && el % 2 !== 0,
+                        'justify-center': pdt.state.viewMode === 'single'
+                    })}
                     pageNumber={el}
-                    width={pdt.state.width * scale}
+                    width={pdt.state.width}
                     height={pdt.state.height}
-                    scale={scale}
+                    scale={pdt.state.scale}
                 />
             ))}
         </Document>
     );
 };
 
-export default PdfViewer;
+export default memo(PdfViewer);

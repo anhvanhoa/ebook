@@ -9,6 +9,7 @@ type EbookContextPage = {
         fileUrl?: string;
         totalPages: number;
         scroll: 'vertical' | 'horizontal';
+        viewMode: 'single' | 'double';
     };
     setState: (state: EbookContextPageState) => void;
 };
@@ -21,7 +22,8 @@ export const stateDefault: EbookContextPageState = {
     pageNumber: 0,
     totalPages: 0,
     scale: 1,
-    scroll: 'vertical'
+    scroll: 'vertical',
+    viewMode: 'single'
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({
