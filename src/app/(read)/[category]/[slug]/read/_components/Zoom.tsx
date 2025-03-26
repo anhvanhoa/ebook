@@ -8,7 +8,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { ChevronDown, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { usePdf } from '@/provider/pdf/content';
+import { usePdf } from '@/provider/pdf/context';
 
 const Zoom = () => {
     const pdt = usePdf();
