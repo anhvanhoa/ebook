@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { usePdf } from '@/provider/pdf/context';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Bookmark, Check, ChevronLeft, ChevronRight, FileDigit, Type } from 'lucide-react';
+import { Bookmark, Check, ChevronLeft, ChevronRight, FileDigit, NotebookTabs, Type } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
-import { useArrowKeyListener, useTripleClickListener } from '@/hooks/useTriggerPdf';
+import useDoubleRightClick, { useArrowKeyListener, useTripleClickListener } from '@/hooks/useTriggerPdf';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const Controll = () => {
     const [pageNumber, setPageNumber] = React.useState('');
@@ -51,6 +53,11 @@ const Controll = () => {
         onClickLeft: handlePrev,
         onClickRight: handleNext
     });
+    const handleRightClick = (_: MouseEvent, side: 'left' | 'right') => {
+        if (side === 'left') handlePrev();
+        else handleNext();
+    };
+    useDoubleRightClick(handleRightClick);
     return (
         <>
             <Popover>
@@ -76,6 +83,30 @@ const Controll = () => {
             <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
                 <Type />
             </Button>
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
+                        <NotebookTabs />
+                    </Button>
+                </SheetTrigger>
+                <SheetContent>
+                    <SheetHeader>
+                        <SheetTitle className='sr-only'></SheetTitle>
+                        <SheetDescription>
+                            <Tabs defaultValue='toc' className='w-[400px]'>
+                                <TabsList>
+                                    <TabsTrigger value='toc'>Mục lục</TabsTrigger>
+                                    <TabsTrigger value='bookmark'>Dấu trang</TabsTrigger>
+                                    <TabsTrigger value='note'>Ghi chú</TabsTrigger>
+                                </TabsList>
+                                <TabsContent value='toc'>Make changes to your account here.</TabsContent>
+                                <TabsContent value='bookmark'>Change your password here.</TabsContent>
+                                <TabsContent value='note'>Change your password here.</TabsContent>
+                            </Tabs>
+                        </SheetDescription>
+                    </SheetHeader>
+                </SheetContent>
+            </Sheet>
             <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
                 <Bookmark />
             </Button>

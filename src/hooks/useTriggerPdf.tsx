@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Side = 'left' | 'right';
 
@@ -68,9 +68,77 @@ export const useArrowKeyListener = ({ onClickLeft, onClickRight }: Props = {}) =
         };
 
         window.addEventListener('keydown', handleKeyDown);
-
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [onClickLeft, onClickRight]);
 };
+
+type PropsZoom = {
+    onMouseUp?: () => void;
+    onMouseDown?: () => void;
+};
+
+export const useZoom = ({ onMouseDown, onMouseUp }: PropsZoom = {}) => {
+    useEffect(() => {
+        const handleWheel = (e: WheelEvent) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                if (e.deltaY < 0 && onMouseUp) {
+                    onMouseUp();
+                } else if (e.deltaY > 0 && onMouseDown) {
+                    onMouseDown();
+                }
+            }
+        };
+        window.addEventListener('wheel', handleWheel, { passive: false });
+        return () => {
+            window.removeEventListener('wheel', handleWheel);
+        };
+    });
+};
+
+type DoubleRightClickCallback = (event: MouseEvent, side: "left" | "right") => void;
+
+const useDoubleRightClick = (callback: DoubleRightClickCallback, delay: number = 300) => {
+    const rightClickCount = useRef<number>(0);
+    const timer = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        const handleContextMenu = (event: MouseEvent) => {
+            event.preventDefault(); // Chặn menu chuột phải mặc định
+            rightClickCount.current++;
+
+            if (rightClickCount.current === 1) {
+                timer.current = setTimeout(() => {
+                    rightClickCount.current = 0; // Reset nếu không double click
+                }, delay);
+            } else if (rightClickCount.current === 2) {
+                if (timer.current) {
+                    clearTimeout(timer.current);
+                }
+                rightClickCount.current = 0;
+
+                // Xác định nửa màn hình: trái hay phải
+                const screenWidth = window.innerWidth;
+                const side = event.clientX < screenWidth / 2 ? "left" : "right";
+
+                callback(event, side);
+            }
+        };
+
+        document.addEventListener("contextmenu", handleContextMenu);
+
+        return () => {
+            document.removeEventListener("contextmenu", handleContextMenu);
+            if (timer.current) {
+                clearTimeout(timer.current);
+            }
+        };
+    }, [callback, delay]);
+
+    return null;
+};
+
+export default useDoubleRightClick;
+

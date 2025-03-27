@@ -20,7 +20,6 @@ const PdfViewer = () => {
     const viewerRef = React.useRef<HTMLDivElement>(null);
 
     async function onDocumentLoadSuccess(e: DocumentCallback) {
-        // console.log(await e.getOutline());
         pdf.setState({ ...pdf.state, totalPages: e.numPages });
     }
     const handleGoPageByTOF = (e: OnItemClickArgs) => {

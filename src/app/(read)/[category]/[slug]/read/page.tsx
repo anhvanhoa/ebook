@@ -6,18 +6,20 @@ import PdfViewer from './_components/PDF';
 import { useRouter } from 'next/navigation';
 import List from './_components/List';
 import Option from './_components/Option';
-import EbookProvider, { EbookContextPageState } from '@/provider/pdf/context';
+import EbookProvider, { EbookContextPageState, usePdf } from '@/provider/pdf/context';
 import Zoom from './_components/Zoom';
 import Controll from './_components/Controll';
+import CbzCbrViewer from './_components/CbzCbrViewer';
 
 const stateDefault: Partial<EbookContextPageState> = {
-    fileUrl: '/go-book.pdf',
+    fileUrl: '/e.pdf',
     scroll: 'vertical'
 };
 
 const EbookPage = () => {
     const router = useRouter();
     const goHome = () => router.push('/');
+    const pdf = usePdf();
     return (
         <EbookProvider init={stateDefault}>
             <div>
@@ -47,7 +49,8 @@ const EbookPage = () => {
                         <Option />
                     </div>
                 </div>
-                <PdfViewer />
+                {pdf.state.typeFile === 'pdf' && <PdfViewer />}
+                {/* <CbzCbrViewer /> */}
             </div>
         </EbookProvider>
     );

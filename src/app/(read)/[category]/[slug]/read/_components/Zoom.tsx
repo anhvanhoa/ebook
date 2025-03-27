@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePdf } from '@/provider/pdf/context';
+import { useZoom } from '@/hooks/useTriggerPdf';
 
 const Zoom = () => {
     const pdt = usePdf();
@@ -22,6 +23,10 @@ const Zoom = () => {
         if (Number(value) > Max) return pdt.setState({ ...pdt.state, scale: Max / 100 });
         pdt.setState({ ...pdt.state, scale: Number(value) / 100 });
     };
+    useZoom({
+        onMouseDown: handleZoomOut,
+        onMouseUp: handleZoomIn
+    })
     return (
         <div className='inline-flex justify-center space-x-1 items-center'>
             <Button

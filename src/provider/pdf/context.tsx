@@ -10,6 +10,7 @@ type EbookContextPage = {
         totalPages: number;
         scroll: 'vertical' | 'horizontal';
         viewMode: 'single' | 'double';
+        typeFile: 'pdf' | 'epub';
     };
     setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
@@ -23,7 +24,8 @@ export const stateDefault: EbookContextPageState = {
     totalPages: 0,
     scale: 1,
     scroll: 'vertical',
-    viewMode: 'single'
+    viewMode: 'single',
+    typeFile: 'pdf'
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({
