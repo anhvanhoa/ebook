@@ -43,13 +43,11 @@ const EbookPage = () => {
                     </div>
                     <Zoom />
                     <div className='flex items-center justify-end'>
-                        <Controll/>
+                        <Controll />
                         <Option />
                     </div>
                 </div>
-                <div className='overflow-x-auto h-[calc(100vh-2.75rem)] custom-scrollbar shadow-md'>
-                    <PdfViewer />
-                </div>
+                <PdfViewer />
             </div>
         </EbookProvider>
     );

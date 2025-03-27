@@ -11,7 +11,7 @@ type EbookContextPage = {
         scroll: 'vertical' | 'horizontal';
         viewMode: 'single' | 'double';
     };
-    setState: (state: EbookContextPageState) => void;
+    setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
 
 export type EbookContextPageState = EbookContextPage['state'];

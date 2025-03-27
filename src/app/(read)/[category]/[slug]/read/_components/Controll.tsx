@@ -4,9 +4,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Bookmark, Check, ChevronLeft, ChevronRight, FileDigit, Type } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
+import { useArrowKeyListener, useTripleClickListener } from '@/hooks/useTriggerPdf';
 
 const Controll = () => {
-    const [pageNumber, setPageNumber] = React.useState(0);
+    const [pageNumber, setPageNumber] = React.useState('');
     const pdf = usePdf();
     const handleNext = () => {
         if (pdf.state.viewMode === 'double') {
@@ -25,7 +26,6 @@ const Controll = () => {
         }
         pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber - 1 });
     };
-
     const onGoPage = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             const value = Number(e.currentTarget.value);
@@ -34,6 +34,23 @@ const Controll = () => {
             pdf.setState({ ...pdf.state, pageNumber: value });
         }
     };
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPageNumber(e.target.value);
+    };
+    const handleGoPage = () => {
+        const value = Number(pageNumber);
+        if (isNaN(value)) return;
+        if (value > pdf.state.totalPages || value < 1) return;
+        pdf.setState({ ...pdf.state, pageNumber: value });
+    };
+    useTripleClickListener({
+        onClickLeft: handlePrev,
+        onClickRight: handleNext
+    });
+    useArrowKeyListener({
+        onClickLeft: handlePrev,
+        onClickRight: handleNext
+    });
     return (
         <>
             <Popover>
@@ -45,17 +62,17 @@ const Controll = () => {
                 <PopoverContent className='p-2'>
                     <div className='flex items-center overflow-hidden rounded-sm'>
                         <Input
-                            value={pageNumber > 0 ? pageNumber : pdf.state.totalPages}
+                            value={pageNumber}
                             onKeyDown={onGoPage}
+                            onChange={onChange}
                             className='rounded-none border-none bg-gray-100'
                         />
-                        <Button className='rounded-none cursor-pointer !bg-blue-500'>
+                        <Button onClick={handleGoPage} className='rounded-none cursor-pointer !bg-blue-500'>
                             <Check />
                         </Button>
                     </div>
                 </PopoverContent>
             </Popover>
-
             <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
                 <Type />
             </Button>
