@@ -12,9 +12,35 @@ import Controll from './_components/Controll';
 import MdViewer from './_components/MdViewer';
 
 const stateDefault: Partial<EbookContextPageState> = {
-    fileUrl: '/e.pdf',
-    scroll: 'vertical',
-    typeFile: 'md'
+    // fileUrl: '/e.pdf',
+    typeFile: 'md',
+    totalPages: 6,
+    pages: [
+        {
+            content: '## NASA\nLorem ipsum, dolor sit amet consectetur adipisicing elit. Quae ab ipsam repellendus quos dicta beatae laboriosam culpa qui consequatur natus. Ab quibusdam eum minima commodi esse. Nisi officia excepturi nemo.',
+            pageNumber: 1
+        },
+        {
+            content: '## NASA\nJust a link: www.nasa.gov 2.',
+            pageNumber: 2
+        },
+        {
+            content: '## NASA\nJust a link: www.nasa.gov 3.',
+            pageNumber: 3
+        },
+        {
+            content: '## NASA\nJust a link: www.nasa.gov 4.',
+            pageNumber: 4
+        },
+        {
+            content: '## NASA\nJust a link: www.nasa.gov 5.',
+            pageNumber: 5
+        },
+        {
+            content: '## NASA\nJust a link: www.nasa.gov 6.',
+            pageNumber: 6
+        }
+    ]
 };
 
 const EbookPage = () => {
