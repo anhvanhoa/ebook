@@ -3,13 +3,32 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
+    DropdownMenuLabel,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Columns2, Fullscreen, Minimize, RectangleVertical, SlidersVertical } from 'lucide-react';
 import { usePdf } from '@/provider/pdf/context';
 import { cn } from '@/lib/utils';
+
+const colors = [
+    { id: 1, name: 'Trắng ngà', bg: '#FFFFF0', color: '#000000' },
+    { id: 2, name: 'Beige', bg: '#F5F5DC', color: '#000000' },
+    { id: 3, name: 'Xám tro', bg: '#3a3a3a', color: '#FFFFFF' },
+    { id: 4, name: 'Xanh pastel', bg: '#fff', color: '#000' },
+    { id: 5, name: 'Đen tuyền', bg: '#000000', color: '#FFFFFF' }
+];
+
+const fonts = [
+    { name: 'Noto Serif', variable: '--font-noto-serif' },
+    { name: 'Lora', variable: '--font-lora' },
+    { name: 'Merriweather', variable: '--font-merriweather' },
+    { name: 'Roboto Slab', variable: '--font-roboto-slab' },
+    { name: 'EB Garamond', variable: '--font-eb-garamond' },
+    { name: 'Geist Mono', variable: '--font-geist-mono' },
+    { name: 'Geist', variable: '--font-geist-sans' },
+    { name: 'Mặc định', variable: '--font-default' },
+];
 
 const Option = () => {
     const pdt = usePdf();
@@ -37,40 +56,73 @@ const Option = () => {
                     <SlidersVertical />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuItem onClick={handleFullScreen} className='flex items-center cursor-pointer'>
-                    {!isFullScreen && (
-                        <>
-                            <Fullscreen />
-                            <span>Đẩy đủ màn hình</span>
-                        </>
-                    )}
-                    {isFullScreen && (
-                        <>
-                            <Minimize />
-                            <span>Thu nhỏ màn hình</span>
-                        </>
-                    )}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                    className={cn('cursor-pointer', {
-                        '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'single'
-                    })}
-                    onClick={() => handleViewMode('single')}
-                >
-                    <RectangleVertical />
-                    <span>1 trang</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    className={cn('cursor-pointer', {
-                        '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'double'
-                    })}
-                    onClick={() => handleViewMode('double')}
-                >
-                    <Columns2 />
-                    <span>2 trang</span>
-                </DropdownMenuItem>
+            <DropdownMenuContent align='end' className='p-0 overflow-hidden'>
+                <DropdownMenuLabel className='bg-gray-200 py-2 text-center text-xs'>Màu nền</DropdownMenuLabel>
+                <div className='grid grid-cols-5 py-1 px-1'>
+                    {colors.map((color) => (
+                        <DropdownMenuItem
+                            key={color.id}
+                            className='p-1'
+                            onClick={() => pdt.setState({ ...pdt.state, background: color.bg, color: color.color })}
+                        >
+                            <span
+                                className='cursor-pointer size-6 rounded-full border'
+                                style={{ backgroundColor: color.bg }}
+                            ></span>
+                        </DropdownMenuItem>
+                    ))}
+                </div>
+                {pdt.state.typeFile === 'html' && (
+                    <>
+                        <DropdownMenuLabel className='bg-gray-200 py-2 text-center text-xs'>Font chữ</DropdownMenuLabel>
+                        <div className='p-1'>
+                            {fonts.map((font) => (
+                                <DropdownMenuItem
+                                    key={font.name}
+                                    className='cursor-pointer'
+                                    onClick={() => pdt.setState({ ...pdt.state, fontFamily: font.variable })}
+                                >
+                                    <span>{font.name}</span>
+                                </DropdownMenuItem>
+                            ))}
+                        </div>
+                    </>
+                )}
+                <DropdownMenuLabel className='bg-gray-200 py-2 text-center text-xs'>Tùy chỉnh</DropdownMenuLabel>
+                <div className='p-1'>
+                    <DropdownMenuItem onClick={handleFullScreen} className='flex items-center cursor-pointer'>
+                        {!isFullScreen && (
+                            <>
+                                <Fullscreen />
+                                <span>Đẩy đủ màn hình</span>
+                            </>
+                        )}
+                        {isFullScreen && (
+                            <>
+                                <Minimize />
+                                <span>Thu nhỏ màn hình</span>
+                            </>
+                        )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        className={cn('cursor-pointer', {
+                            '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'single'
+                        })}
+                        onClick={() => handleViewMode('single')}
+                    >
+                        <RectangleVertical />
+                        <span>1 trang</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        className={cn('cursor-pointer', {
+                            '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'double'
+                        })}
+                        onClick={() => handleViewMode('double')}
+                    >
+                        <Columns2 />
+                        <span>2 trang</span>
+                    </DropdownMenuItem>
+                </div>
             </DropdownMenuContent>
         </DropdownMenu>
     );

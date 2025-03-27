@@ -120,10 +120,12 @@
     body {
         @apply bg-background text-foreground;
     }
-    .justify-center div.annotationLayer, .justify-center div.textLayer  {
+    .justify-center div.annotationLayer,
+    .justify-center div.textLayer {
         @apply !left-1/2 -translate-x-1/2;
     }
-    .justify-end div.annotationLayer, .justify-end div.textLayer  {
+    .justify-end div.annotationLayer,
+    .justify-end div.textLayer {
         @apply !right-0;
     }
     .custom-scrollbar::-webkit-scrollbar {

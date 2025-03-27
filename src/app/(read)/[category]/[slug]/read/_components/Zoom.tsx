@@ -11,22 +11,28 @@ import { Button } from '@/components/ui/button';
 import { usePdf } from '@/provider/pdf/context';
 import { useZoom } from '@/hooks/useTriggerPdf';
 
+const Max = 300;
 const Zoom = () => {
     const pdt = usePdf();
-    const handleZoomIn = () => pdt.setState({ ...pdt.state, scale: pdt.state.scale + 0.05 });
-    const handleZoomOut = () => pdt.setState({ ...pdt.state, scale: pdt.state.scale - 0.05 });
+    const handleZoomIn = () => {
+        if (pdt.state.scale >= Max / 100) return;
+        pdt.setState({ ...pdt.state, scale: pdt.state.scale + 0.05 });
+    };
+    const handleZoomOut = () => {
+        if (pdt.state.scale <= 0.05) return;
+        pdt.setState({ ...pdt.state, scale: pdt.state.scale - 0.05 });
+    };
     const changeZoom = (scale: number) => pdt.setState({ ...pdt.state, scale });
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace('%', '');
         if (isNaN(Number(value))) return;
-        const Max = 300;
         if (Number(value) > Max) return pdt.setState({ ...pdt.state, scale: Max / 100 });
         pdt.setState({ ...pdt.state, scale: Number(value) / 100 });
     };
     useZoom({
         onMouseDown: handleZoomOut,
         onMouseUp: handleZoomIn
-    })
+    });
     return (
         <div className='inline-flex justify-center space-x-1 items-center'>
             <Button
@@ -42,7 +48,7 @@ const Zoom = () => {
                     <Input
                         onChange={onChange}
                         value={`${Math.round(pdt.state.scale * 100)}%`}
-                        className='px-1 text-xs w-14 text-center border-none h-auto py-2'
+                        className='px-1 text-xs w-14 text-center border-none h-auto py-2 text-blue-500'
                     />
                     <DropdownMenuTrigger asChild className='p-0.5 focus-visible:ring-0 cursor-pointer'>
                         <Button

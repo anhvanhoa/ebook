@@ -7,6 +7,7 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css'; // Ẩn chú thích
 import Loading from './Loading';
 import { usePdf } from '@/provider/pdf/context';
 import { cn } from '@/lib/utils';
+import { useDebounce } from 'use-debounce';
 import { DocumentCallback, OnItemClickArgs } from 'react-pdf/dist/esm/shared/types.js';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
 
@@ -18,7 +19,7 @@ const options = {
 const PdfViewer = () => {
     const pdf = usePdf();
     const viewerRef = React.useRef<HTMLDivElement>(null);
-
+    const [scale] = useDebounce(pdf.state.scale, 250);
     async function onDocumentLoadSuccess(e: DocumentCallback) {
         pdf.setState({ ...pdf.state, totalPages: e.numPages });
     }
@@ -53,12 +54,11 @@ const PdfViewer = () => {
                     })}
                 >
                     <Page
-                        onDoubleClick={() => console.log('double click')}
                         loading={<Loading className='w-screen' />}
                         devicePixelRatio={2}
                         pageNumber={pdf.state.pageNumber}
-                        width={pdf.state.width * pdf.state.scale}
-                        scale={pdf.state.scale}
+                        width={pdf.state.width}
+                        scale={scale}
                     >
                         <div className='flex justify-center sticky bottom-2 z-10'>
                             <p className='rounded-3xl text-xs px-2.5 py-1 bg-gray-50/10 backdrop-blur-md'>
@@ -75,8 +75,8 @@ const PdfViewer = () => {
                                 loading={<Loading />}
                                 devicePixelRatio={2}
                                 pageNumber={pdf.state.pageNumber + 1}
-                                width={pdf.state.width * pdf.state.scale}
-                                scale={pdf.state.scale}
+                                width={pdf.state.width}
+                                scale={scale}
                             >
                                 <div className='flex justify-center sticky bottom-2'>
                                     <p className='rounded-3xl text-xs px-2.5 py-1 bg-gray-50/10 backdrop-blur-md'>

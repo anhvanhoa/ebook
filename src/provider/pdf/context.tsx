@@ -1,9 +1,17 @@
+'use client';
 import React from 'react';
 
 type Page = {
     content: string;
     pageNumber: number;
-}
+};
+
+type Img = {
+    url: string;
+    pageNumber: number;
+    alt: string;
+    id: string;
+};
 
 type EbookContextPage = {
     state: {
@@ -13,10 +21,13 @@ type EbookContextPage = {
         scale: number;
         fileUrl?: string;
         totalPages: number;
-        scroll: 'vertical' | 'horizontal';
+        background: string;
+        color: string;
         viewMode: 'single' | 'double';
-        typeFile: 'pdf' | 'epub' | 'md';
+        typeFile: 'pdf' | 'epub' | 'html' | 'image';
         pages: Page[];
+        images: Img[];
+        fontFamily?: string;
     };
     setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
@@ -29,10 +40,12 @@ export const stateDefault: EbookContextPageState = {
     pageNumber: 1,
     totalPages: 0,
     scale: 1,
-    scroll: 'vertical',
+    background: '#fff',
+    color: '#000',
     viewMode: 'single',
     typeFile: 'pdf',
-    pages: []
+    pages: [],
+    images: []
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({

@@ -1,27 +1,45 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import { House, Undo } from 'lucide-react';
-import React from 'react';
-import PdfViewer from './_components/PDF';
-import { useRouter } from 'next/navigation';
-import List from './_components/List';
-import Option from './_components/Option';
 import EbookProvider, { EbookContextPageState } from '@/provider/pdf/context';
-import Zoom from './_components/Zoom';
-import Controll from './_components/Controll';
-import MdViewer from './_components/MdViewer';
+import Read from './Read';
+import { Noto_Serif, Lora, Merriweather, Roboto_Slab, EB_Garamond } from 'next/font/google';
+import { cn } from '@/lib/utils';
+
+const noto = Noto_Serif({
+    variable: '--font-noto-serif',
+    subsets: ['latin']
+});
+const lora = Lora({
+    variable: '--font-lora',
+    subsets: ['latin']
+});
+
+const merriweather = Merriweather({
+    variable: '--font-merriweather',
+    subsets: ['latin'],
+    weight: ['300', '400', '700', '900']
+});
+
+const robotoSlab = Roboto_Slab({
+    variable: '--font-roboto-slab',
+    subsets: ['latin']
+});
+
+const ebGaramond = EB_Garamond({
+    variable: '--font-eb-garamond',
+    subsets: ['latin']
+});
 
 const stateDefault: Partial<EbookContextPageState> = {
     // fileUrl: '/e.pdf',
-    typeFile: 'md',
+    typeFile: 'html',
     totalPages: 6,
     pages: [
         {
-            content: '## NASA\nLorem ipsum, dolor sit amet consectetur adipisicing elit. Quae ab ipsam repellendus quos dicta beatae laboriosam culpa qui consequatur natus. Ab quibusdam eum minima commodi esse. Nisi officia excepturi nemo.',
+            content:
+                '<h2 style="text-align:center;">NASA</h2><p>Just a link: <a href="https://www.nasa.gov">www.nasa.gov</a> 1.</p>',
             pageNumber: 1
         },
         {
-            content: '## NASA\nJust a link: www.nasa.gov 2.',
+            content: '<h2>NASA</h2><p>Just a link: www.nasa.gov 2.</p>',
             pageNumber: 2
         },
         {
@@ -41,44 +59,36 @@ const stateDefault: Partial<EbookContextPageState> = {
             pageNumber: 6
         }
     ]
+    // images: [
+    //     {
+    //         alt: 'image 1',
+    //         id: '1',
+    //         pageNumber: 1,
+    //         url: '/page-1.jpg'
+    //     },
+    //     {
+    //         alt: 'image 2',
+    //         id: '2',
+    //         pageNumber: 2,
+    //         url: '/page-1.png'
+    //     }
+    // ]
 };
-
 const EbookPage = () => {
-    const router = useRouter();
-    const goHome = () => router.push('/');
     return (
-        <EbookProvider init={stateDefault}>
-            <div>
-                <div className='mx-auto sticky top-0 z-10 bg-white grid grid-cols-3 p-1 items-center justify-between'>
-                    <div className='flex items-center justify-start'>
-                        <Button
-                            onClick={router.back}
-                            size='icon'
-                            variant={'ghost'}
-                            className='font-normal cursor-pointer !text-blue-500'
-                        >
-                            <Undo />
-                        </Button>
-                        <Button
-                            onClick={goHome}
-                            size='icon'
-                            variant={'ghost'}
-                            className='font-normal cursor-pointer !text-blue-500'
-                        >
-                            <House />
-                        </Button>
-                        <List />
-                    </div>
-                    <Zoom />
-                    <div className='flex items-center justify-end'>
-                        <Controll />
-                        <Option />
-                    </div>
-                </div>
-                {stateDefault.typeFile === 'pdf' && <PdfViewer />}
-                {stateDefault.typeFile === 'md' && <MdViewer />}
-            </div>
-        </EbookProvider>
+        <div
+            className={cn(
+                noto.variable,
+                lora.variable,
+                merriweather.variable,
+                robotoSlab.variable,
+                ebGaramond.variable,
+            )}
+        >
+            <EbookProvider init={stateDefault}>
+                <Read />
+            </EbookProvider>
+        </div>
     );
 };
 

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { usePdf } from '@/provider/pdf/context';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Bookmark, Check, ChevronLeft, ChevronRight, FileDigit, NotebookTabs, Type } from 'lucide-react';
+import { Bookmark, Check, ChevronLeft, ChevronRight, FileDigit, NotebookTabs} from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import useDoubleRightClick, { useArrowKeyListener, useTripleClickListener } from '@/hooks/useTriggerPdf';
@@ -80,9 +80,6 @@ const Controll = () => {
                     </div>
                 </PopoverContent>
             </Popover>
-            <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
-                <Type />
-            </Button>
             <Sheet>
                 <SheetTrigger asChild>
                     <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
@@ -92,7 +89,7 @@ const Controll = () => {
                 <SheetContent>
                     <SheetHeader>
                         <SheetTitle className='sr-only'></SheetTitle>
-                        <SheetDescription>
+                        <SheetDescription asChild>
                             <Tabs defaultValue='toc' className='w-[400px]'>
                                 <TabsList>
                                     <TabsTrigger value='toc'>Mục lục</TabsTrigger>
