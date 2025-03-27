@@ -1,5 +1,10 @@
 import React from 'react';
 
+type Page = {
+    content: string;
+    pageNumber: number;
+}
+
 type EbookContextPage = {
     state: {
         width: number;
@@ -10,7 +15,8 @@ type EbookContextPage = {
         totalPages: number;
         scroll: 'vertical' | 'horizontal';
         viewMode: 'single' | 'double';
-        typeFile: 'pdf' | 'epub';
+        typeFile: 'pdf' | 'epub' | 'md';
+        pages: Page[];
     };
     setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
@@ -25,7 +31,8 @@ export const stateDefault: EbookContextPageState = {
     scale: 1,
     scroll: 'vertical',
     viewMode: 'single',
-    typeFile: 'pdf'
+    typeFile: 'pdf',
+    pages: []
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({

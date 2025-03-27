@@ -6,20 +6,20 @@ import PdfViewer from './_components/PDF';
 import { useRouter } from 'next/navigation';
 import List from './_components/List';
 import Option from './_components/Option';
-import EbookProvider, { EbookContextPageState, usePdf } from '@/provider/pdf/context';
+import EbookProvider, { EbookContextPageState } from '@/provider/pdf/context';
 import Zoom from './_components/Zoom';
 import Controll from './_components/Controll';
-import CbzCbrViewer from './_components/CbzCbrViewer';
+import MdViewer from './_components/MdViewer';
 
 const stateDefault: Partial<EbookContextPageState> = {
     fileUrl: '/e.pdf',
-    scroll: 'vertical'
+    scroll: 'vertical',
+    typeFile: 'md'
 };
 
 const EbookPage = () => {
     const router = useRouter();
     const goHome = () => router.push('/');
-    const pdf = usePdf();
     return (
         <EbookProvider init={stateDefault}>
             <div>
@@ -49,8 +49,8 @@ const EbookPage = () => {
                         <Option />
                     </div>
                 </div>
-                {pdf.state.typeFile === 'pdf' && <PdfViewer />}
-                {/* <CbzCbrViewer /> */}
+                {stateDefault.typeFile === 'pdf' && <PdfViewer />}
+                {stateDefault.typeFile === 'md' && <MdViewer />}
             </div>
         </EbookProvider>
     );
