@@ -4,6 +4,16 @@
 
 @theme {
     --breakpoint-xs: 24rem;
+
+    --animate-marquee: marquee 10s linear infinite;
+    @keyframes marquee {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
 }
 
 @custom-variant dark (&:is(.dark *));

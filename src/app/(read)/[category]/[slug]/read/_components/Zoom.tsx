@@ -10,9 +10,14 @@ import { ChevronDown, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePdf } from '@/provider/pdf/context';
 import { useZoom } from '@/hooks/useTriggerPdf';
+import { cn } from '@/lib/utils';
 
 const Max = 300;
-const Zoom = () => {
+type ZoomProps = {
+    className?: string;
+};
+
+const Zoom = ({ className = 'inline-flex' }: ZoomProps) => {
     const pdt = usePdf();
     const handleZoomIn = () => {
         if (pdt.state.scale >= Max / 100) return;
@@ -34,7 +39,7 @@ const Zoom = () => {
         onMouseUp: handleZoomIn
     });
     return (
-        <div className='inline-flex justify-center space-x-1 items-center'>
+        <div className={cn('inline-flex justify-center space-x-1 items-center', className)}>
             <Button
                 onClick={handleZoomOut}
                 size='icon'
@@ -60,7 +65,7 @@ const Zoom = () => {
                         </Button>
                     </DropdownMenuTrigger>
                 </div>
-                <DropdownMenuContent>
+                <DropdownMenuContent align='end'>
                     <DropdownMenuItem onClick={() => changeZoom(0.25)} className='cursor-pointer'>
                         25%
                     </DropdownMenuItem>

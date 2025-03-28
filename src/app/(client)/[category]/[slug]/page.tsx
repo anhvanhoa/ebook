@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ArrowDownToLine, BookOpen, ChevronLeft, Play, Volume2 } from 'lucide-react';
+import { ArrowDownToLine, BookOpen, Play, Volume2 } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 import Ebook from './_components/Ebook';
@@ -133,52 +133,52 @@ const page = () => {
                 ></div>
             </div>
             <div className='max-w-screen-lg mx-auto mt-12 mb-8 px-4'>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8'>
-                        <div className='col-span-2 space-y-4'>
-                            {res.chapters.length !== 0 && (
-                                <div>
-                                    <h3 className='text-lg font-semibold uppercase'>Danh sách Chương</h3>
-                                    <div className='py-2 max-h-96 overflow-y-auto space-y-1 custom-scrollbar px-2'>
-                                        {res.chapters.map((chapter) => (
-                                            <div key={chapter.id} className='flex items-center justify-between'>
-                                                <Link
-                                                    className='text-sm hover:underline hover:text-pink-600'
-                                                    href={chapter.link}
-                                                >
-                                                    {chapter.title}
-                                                </Link>
-                                                <div>
-                                                    <Button variant={'ghost'} className='h-auto !p-1'>
-                                                        <Volume2 />
-                                                    </Button>
-                                                </div>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8'>
+                    <div className='col-span-2 space-y-4'>
+                        {res.chapters.length !== 0 && (
+                            <div>
+                                <h3 className='text-lg font-semibold uppercase'>Danh sách Chương</h3>
+                                <div className='py-2 max-h-96 overflow-y-auto space-y-1 custom-scrollbar px-2'>
+                                    {res.chapters.map((chapter) => (
+                                        <div key={chapter.id} className='flex items-center justify-between'>
+                                            <Link
+                                                className='text-sm hover:underline hover:text-pink-600'
+                                                href={chapter.link}
+                                            >
+                                                {chapter.title}
+                                            </Link>
+                                            <div>
+                                                <Button variant={'ghost'} className='h-auto !p-1'>
+                                                    <Volume2 />
+                                                </Button>
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            <div>
-                                <h3 className='text-lg font-semibold uppercase'>Tóm tắt</h3>
-                                <div
-                                    className='px-2 text-sm py-2 space-y-2'
-                                    dangerouslySetInnerHTML={{ __html: res.summary }}
-                                ></div>
-                            </div>
-                            <div>
-                                <h3 className='text-lg font-semibold uppercase'>Họp Chợ</h3>
-                                <div>
-                                    <Review />
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
+                        )}
+                        <div>
+                            <h3 className='text-lg font-semibold uppercase'>Tóm tắt</h3>
+                            <div
+                                className='px-2 text-sm py-2 space-y-2'
+                                dangerouslySetInnerHTML={{ __html: res.summary }}
+                            ></div>
                         </div>
-                        <div className='col-span-1 mt-4 md:mt-0'>
-                            <h2 className='text-lg font-semibold uppercase'>Có thể bạn quan tâm</h2>
-                            <div className='mt-4'>
-                                <Ebook />
+                        <div>
+                            <h3 className='text-lg font-semibold uppercase'>Họp Chợ</h3>
+                            <div>
+                                <Review />
                             </div>
                         </div>
                     </div>
+                    <div className='col-span-1 mt-4 md:mt-0'>
+                        <h2 className='text-lg font-semibold uppercase'>Có thể bạn quan tâm</h2>
+                        <div className='mt-4'>
+                            <Ebook />
+                        </div>
+                    </div>
                 </div>
+            </div>
         </div>
     );
 };

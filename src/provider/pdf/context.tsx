@@ -28,6 +28,7 @@ type EbookContextPage = {
         pages: Page[];
         images: Img[];
         fontFamily?: string;
+        isMobile: boolean;
     };
     setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
@@ -45,7 +46,8 @@ export const stateDefault: EbookContextPageState = {
     viewMode: 'single',
     typeFile: 'pdf',
     pages: [],
-    images: []
+    images: [],
+    isMobile: false,
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({

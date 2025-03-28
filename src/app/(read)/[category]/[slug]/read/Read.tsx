@@ -9,21 +9,50 @@ import Zoom from './_components/Zoom';
 import Controll from './_components/Controll';
 import HtmlViewer from './_components/HtmlViewer';
 import ImgViewer from './_components/ImgViewer';
-import { usePdf } from '@/provider/pdf/context';
-import { useResize } from '@/hooks/useTriggerPdf';
+import { stateDefault, usePdf } from '@/provider/pdf/context';
+import { useControll, useResize, useTripleClickListener } from '@/hooks/useTriggerPdf';
+import ControllMobi from './_components/ControllMobi';
 
 const Read = () => {
     const pdf = usePdf();
     const router = useRouter();
     const goHome = () => router.push('/');
-    useResize((e) => {
-        console.log(e);
+    const { handleNext, handlePrev } = useControll();
+    useResize(() => {
+        const { innerWidth } = window;
+        if (innerWidth <= 1024) {
+            pdf.setState((state) => ({
+                ...state,
+                isMobile: true
+            }));
+        } else {
+            pdf.setState((state) => ({
+                ...state,
+                isMobile: false
+            }));
+        }
+        if (innerWidth < stateDefault.width) {
+            pdf.setState((state) => ({
+                ...state,
+                width: innerWidth
+            }));
+        } else if (innerWidth > stateDefault.width) {
+            pdf.setState((state) => ({
+                ...state,
+                width: stateDefault.width
+            }));
+        }
+    });
+
+    const refContainer = useTripleClickListener({
+        onClickLeft: handlePrev,
+        onClickRight: handleNext
     });
     return (
         <div style={{ backgroundColor: pdf.state.background, color: `${pdf.state.color}` }}>
             <div
                 style={{ backgroundColor: pdf.state.background }}
-                className='mx-auto sticky top-0 z-10 grid grid-cols-3 py-1 px-2 items-center justify-between'
+                className='mx-auto sticky top-0 z-10 grid grid-cols-2 sm:grid-cols-3 py-1 px-2 items-center justify-between'
             >
                 <div className='flex items-center justify-start'>
                     <Button
@@ -44,15 +73,18 @@ const Read = () => {
                     </Button>
                     <List />
                 </div>
-                <Zoom />
+                <Zoom className='hidden sm:inline-flex' />
                 <div className='flex items-center justify-end'>
                     <Controll />
                     <Option />
                 </div>
             </div>
-            {pdf.state.typeFile === 'pdf' && <PdfViewer />}
-            {pdf.state.typeFile === 'html' && <HtmlViewer />}
-            {pdf.state.typeFile === 'image' && <ImgViewer />}
+            <div ref={refContainer}>
+                {pdf.state.typeFile === 'pdf' && <PdfViewer />}
+                {pdf.state.typeFile === 'html' && <HtmlViewer />}
+                {pdf.state.typeFile === 'image' && <ImgViewer />}
+            </div>
+            <ControllMobi />
         </div>
     );
 };

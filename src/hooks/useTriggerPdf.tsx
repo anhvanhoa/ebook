@@ -1,5 +1,5 @@
+import { usePdf } from '@/provider/pdf/context';
 import { useEffect, useRef, useState } from 'react';
-
 type Side = 'left' | 'right';
 
 type Props = {
@@ -7,25 +7,33 @@ type Props = {
     onClickRight?: () => void;
 };
 
-const TimeOut = 250;
+const TimeOut = 250; // Thời gian tối đa giữa các lần click (ms)
+
 export const useTripleClickListener = ({ onClickLeft, onClickRight }: Props = {}) => {
     const [leftClickCount, setLeftClickCount] = useState(0);
     const [rightClickCount, setRightClickCount] = useState(0);
     const [lastClickTime, setLastClickTime] = useState(0);
     const [lastSide, setLastSide] = useState<Side | null>(null);
+    const handleRightClick = (_: MouseEvent, side: 'left' | 'right') => {
+        if (!onClickLeft || !onClickRight) return;
+        if (side === 'left') onClickLeft();
+        else onClickRight();
+    };
+    const containerRef = useDoubleRightClick(handleRightClick);
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
-            const screenWidth = window.innerWidth;
+            if (!containerRef.current?.contains(e.target as Node)) return; // Chỉ xử lý trong div
+
+            const containerWidth = containerRef.current.offsetWidth;
+            const offsetX = e.clientX - containerRef.current.getBoundingClientRect().left;
             const currentTime = Date.now();
             const timeDiff = currentTime - lastClickTime;
-            const currentSide = e.clientX < screenWidth / 2 ? 'left' : 'right';
+            const currentSide = offsetX < containerWidth / 2 ? 'left' : 'right';
 
             if (timeDiff > TimeOut || lastSide !== currentSide) {
-                // Nếu đổi bên hoặc quá thời gian, reset cả hai và bắt đầu lại
                 setLeftClickCount(currentSide === 'left' ? 1 : 0);
                 setRightClickCount(currentSide === 'right' ? 1 : 0);
             } else {
-                // Nếu cùng bên, tăng đếm cho bên đó
                 if (currentSide === 'left') {
                     setLeftClickCount((prev) => prev + 1);
                 } else {
@@ -37,23 +45,24 @@ export const useTripleClickListener = ({ onClickLeft, onClickRight }: Props = {}
             setLastClickTime(currentTime);
 
             if (leftClickCount === 2 && currentSide === 'left') {
-                if (onClickLeft) {
-                    onClickLeft();
-                }
+                onClickLeft?.();
                 setLeftClickCount(0);
             }
             if (rightClickCount === 2 && currentSide === 'right') {
-                if (onClickRight) {
-                    onClickRight();
-                }
+                onClickRight?.();
                 setRightClickCount(0);
             }
         };
-        document.addEventListener('click', handleClick);
+
+        const container = containerRef.current;
+        container?.addEventListener('click', handleClick);
+
         return () => {
-            document.removeEventListener('click', handleClick);
+            container?.removeEventListener('click', handleClick);
         };
-    }, [leftClickCount, rightClickCount, lastClickTime, lastSide, onClickLeft, onClickRight]);
+    }, [leftClickCount, rightClickCount, lastClickTime, lastSide, onClickLeft, onClickRight, containerRef]);
+
+    return containerRef;
 };
 
 export const useArrowKeyListener = ({ onClickLeft, onClickRight }: Props = {}) => {
@@ -98,14 +107,17 @@ export const useZoom = ({ onMouseDown, onMouseUp }: PropsZoom = {}) => {
     });
 };
 
-type DoubleRightClickCallback = (event: MouseEvent, side: "left" | "right") => void;
+type DoubleRightClickCallback = (event: MouseEvent, side: 'left' | 'right') => void;
 
 export const useDoubleRightClick = (callback: DoubleRightClickCallback, delay: number = 300) => {
     const rightClickCount = useRef<number>(0);
     const timer = useRef<NodeJS.Timeout | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null); // Ref đến thẻ div
 
     useEffect(() => {
         const handleContextMenu = (event: MouseEvent) => {
+            if (!containerRef.current?.contains(event.target as Node)) return; // Chỉ xử lý trong div
+
             event.preventDefault(); // Chặn menu chuột phải mặc định
             rightClickCount.current++;
 
@@ -119,32 +131,60 @@ export const useDoubleRightClick = (callback: DoubleRightClickCallback, delay: n
                 }
                 rightClickCount.current = 0;
 
-                // Xác định nửa màn hình: trái hay phải
-                const screenWidth = window.innerWidth;
-                const side = event.clientX < screenWidth / 2 ? "left" : "right";
+                // Xác định nửa thẻ `div`: trái hay phải
+                const containerWidth = containerRef.current.offsetWidth;
+                const offsetX = event.clientX - containerRef.current.getBoundingClientRect().left;
+                const side = offsetX < containerWidth / 2 ? 'left' : 'right';
 
                 callback(event, side);
             }
         };
 
-        document.addEventListener("contextmenu", handleContextMenu);
+        const container = containerRef.current;
+        container?.addEventListener('contextmenu', handleContextMenu);
 
         return () => {
-            document.removeEventListener("contextmenu", handleContextMenu);
+            container?.removeEventListener('contextmenu', handleContextMenu);
             if (timer.current) {
                 clearTimeout(timer.current);
             }
         };
     }, [callback, delay]);
 
-    return null;
+    return containerRef;
 };
 
-export const useResize = (callback: (ev: UIEvent) => void) => {
+export const useResize = (callback: () => void) => {
+    useEffect(() => {
+        callback();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     useEffect(() => {
         window.addEventListener('resize', callback);
         return () => {
             window.removeEventListener('resize', callback);
         };
     }, [callback]);
-}
+};
+
+export const useControll = () => {
+    const pdf = usePdf();
+    const handleNext = () => {
+        if (pdf.state.viewMode === 'double') {
+            if (pdf.state.pageNumber + 1 >= pdf.state.totalPages) return;
+            pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber + 2 });
+            return;
+        }
+        if (pdf.state.pageNumber >= pdf.state.totalPages) return;
+        pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber + 1 });
+    };
+    const handlePrev = () => {
+        if (pdf.state.pageNumber === 1) return;
+        if (pdf.state.viewMode === 'double') {
+            pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber - 2 });
+            return;
+        }
+        pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber - 1 });
+    };
+    return { handleNext, handlePrev };
+};
