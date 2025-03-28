@@ -27,12 +27,12 @@ const ebookCategories = [
 
 const Categories = () => {
     return (
-        <div className='border-b'>
-            <div className='max-w-screen-lg mx-auto py-3 px-6'>
+        <div className='py-1'>
+            <div className='max-w-screen-lg mx-auto px-12 md:px-14'>
                 <Carousel>
                     <CarouselContent className='-ml-2'>
                         {ebookCategories.map((category, i) => (
-                            <CarouselItem key={i} className='pl-2 text-sm basis-1/7'>
+                            <CarouselItem key={i} className='pl-2 text-sm md:basis-1/7 sm:basis-1/5 basis-1/3'>
                                 <Link
                                     key={category.id}
                                     href={category.link}

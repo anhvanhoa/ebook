@@ -2,6 +2,10 @@
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
 
+@theme {
+    --breakpoint-xs: 24rem;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

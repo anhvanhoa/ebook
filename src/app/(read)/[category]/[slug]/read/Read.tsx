@@ -10,11 +10,15 @@ import Controll from './_components/Controll';
 import HtmlViewer from './_components/HtmlViewer';
 import ImgViewer from './_components/ImgViewer';
 import { usePdf } from '@/provider/pdf/context';
+import { useResize } from '@/hooks/useTriggerPdf';
 
 const Read = () => {
     const pdf = usePdf();
     const router = useRouter();
     const goHome = () => router.push('/');
+    useResize((e) => {
+        console.log(e);
+    });
     return (
         <div style={{ backgroundColor: pdf.state.background, color: `${pdf.state.color}` }}>
             <div

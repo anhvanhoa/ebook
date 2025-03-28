@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Bookmark, Check, ChevronLeft, ChevronRight, FileDigit, NotebookTabs} from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
-import useDoubleRightClick, { useArrowKeyListener, useTripleClickListener } from '@/hooks/useTriggerPdf';
+import { useArrowKeyListener, useDoubleRightClick, useTripleClickListener } from '@/hooks/useTriggerPdf';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 

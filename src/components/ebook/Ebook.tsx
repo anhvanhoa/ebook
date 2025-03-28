@@ -24,8 +24,10 @@ const Ebook = ({ category, image, slug, title, className }: EbookProps) => {
                 />
             </div>
             <div className='px-2 py-2 text-center'>
-                <h2 className='line-clamp-1 group-hover:underline underline-offset-1 decoration-1'>{title}</h2>
-                <p className='text-sm italic'>{category}</p>
+                <h2 className='line-clamp-1 group-hover:underline text-sm sm:text-base underline-offset-1 decoration-1'>
+                    {title}
+                </h2>
+                <p className='text-xs sm:text-sm italic'>{category}</p>
             </div>
         </Link>
     );

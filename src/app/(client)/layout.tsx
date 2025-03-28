@@ -1,7 +1,7 @@
-// import 'core-js/full/promise/with-resolvers'
 import React from 'react';
 import Categories from './_components/Categories';
 import Footer from './_components/Footer';
+import Header from './_components/Header';
 
 type LayoutClientProps = {
     children: React.ReactNode;
@@ -10,6 +10,7 @@ type LayoutClientProps = {
 const LayoutClient = ({ children }: LayoutClientProps) => {
     return (
         <div className='text-gray-700'>
+            <Header />
             <Categories />
             {children}
             <Footer />

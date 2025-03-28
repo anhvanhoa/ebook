@@ -100,7 +100,7 @@ export const useZoom = ({ onMouseDown, onMouseUp }: PropsZoom = {}) => {
 
 type DoubleRightClickCallback = (event: MouseEvent, side: "left" | "right") => void;
 
-const useDoubleRightClick = (callback: DoubleRightClickCallback, delay: number = 300) => {
+export const useDoubleRightClick = (callback: DoubleRightClickCallback, delay: number = 300) => {
     const rightClickCount = useRef<number>(0);
     const timer = useRef<NodeJS.Timeout | null>(null);
 
@@ -140,5 +140,11 @@ const useDoubleRightClick = (callback: DoubleRightClickCallback, delay: number =
     return null;
 };
 
-export default useDoubleRightClick;
-
+export const useResize = (callback: (ev: UIEvent) => void) => {
+    useEffect(() => {
+        window.addEventListener('resize', callback);
+        return () => {
+            window.removeEventListener('resize', callback);
+        };
+    }, [callback]);
+}
