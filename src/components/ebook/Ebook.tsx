@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -7,11 +8,12 @@ type EbookProps = {
     slug: string;
     category: string;
     image: string;
+    className?: string;
 };
 
-const Ebook = ({ category, image, slug, title }: EbookProps) => {
+const Ebook = ({ category, image, slug, title, className }: EbookProps) => {
     return (
-        <Link href={`/${slug}`} className='flex items-center justify-center flex-col group'>
+        <Link href={`/${slug}`} className={cn('flex items-center justify-center flex-col group', className)}>
             <div className='rounded-md bg-gray-50 p-1.5'>
                 <Image
                     className='aspect-[4/6] object-cover rounded-md grayscale hover:grayscale-50 duration-500 transition'
