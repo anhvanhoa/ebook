@@ -4,7 +4,6 @@ import Image from 'next/image';
 import React from 'react';
 import Ebook from './_components/Ebook';
 import Link from 'next/link';
-import Review from './_components/Review';
 
 const res = {
     title: 'Wow người đọc',
@@ -53,7 +52,7 @@ const page = () => {
                         <div className='flex items-start md:flex-row flex-col h-full py-10 md:py-12'>
                             <div className='shrink-0'>
                                 <Image
-                                    className='w-32 sm:w-36 md:w-64 aspect-[4/6] rounded-md'
+                                    className='w-32 sm:w-36 md:w-52 aspect-[4/6] rounded-md'
                                     src={res.image}
                                     alt={res.title}
                                     width={300}
@@ -98,7 +97,7 @@ const page = () => {
                                     </div>
                                     <div className='shrink-0'>
                                         <p className='text-white/60 font-light'>Nguồn</p>
-                                        <p className='font-bold mt-1'>{res.createdBy.name}</p>
+                                        <p className='font-semibold mt-1'>{res.createdBy.name}</p>
                                     </div>
                                 </div>
                                 <div className='mt-5 flex gap-4'>
@@ -167,7 +166,8 @@ const page = () => {
                         <div>
                             <h3 className='text-lg font-semibold uppercase'>Họp Chợ</h3>
                             <div>
-                                <Review />
+                                {/* <Review /> */}
+                                <p className='text-sm text-center py-2 text-primary/60'>Đang phát triển</p>
                             </div>
                         </div>
                     </div>

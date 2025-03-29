@@ -10,8 +10,9 @@ import Controll from './_components/Controll';
 import HtmlViewer from './_components/HtmlViewer';
 import ImgViewer from './_components/ImgViewer';
 import { stateDefault, usePdf } from '@/provider/pdf/context';
-import { useControll, useResize, useTripleClickListener } from '@/hooks/useTriggerPdf';
+import { useControll, useDoubleRightClick, useResize, useTripleClickListener } from '@/hooks/useTriggerPdf';
 import ControllMobi from './_components/ControllMobi';
+import { useRef } from 'react';
 
 const Read = () => {
     const pdf = usePdf();
@@ -43,11 +44,17 @@ const Read = () => {
             }));
         }
     });
-
-    const refContainer = useTripleClickListener({
+    const containerRef = useRef<HTMLDivElement>(null); // Ref đến thẻ div
+    useTripleClickListener({
         onClickLeft: handlePrev,
-        onClickRight: handleNext
+        onClickRight: handleNext,
+        ref: containerRef
     });
+    const handleRightClick = (_: MouseEvent, side: 'left' | 'right') => {
+        if (side === 'left') handlePrev();
+        else handleNext();
+    };
+    useDoubleRightClick(containerRef, handleRightClick);
     return (
         <div style={{ backgroundColor: pdf.state.background, color: `${pdf.state.color}` }}>
             <div
@@ -79,7 +86,7 @@ const Read = () => {
                     <Option />
                 </div>
             </div>
-            <div ref={refContainer}>
+            <div ref={containerRef}>
                 {pdf.state.typeFile === 'pdf' && <PdfViewer />}
                 {pdf.state.typeFile === 'html' && <HtmlViewer />}
                 {pdf.state.typeFile === 'image' && <ImgViewer />}

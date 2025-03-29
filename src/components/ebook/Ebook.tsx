@@ -14,7 +14,7 @@ type EbookProps = {
 const Ebook = ({ category, image, slug, title, className }: EbookProps) => {
     return (
         <Link href={`/${slug}`} className={cn('flex items-center justify-center flex-col group', className)}>
-            <div className='rounded-md bg-gray-50 p-1.5'>
+            <div className='rounded-md bg-gray-50 dark:bg-gray-700 p-1.5'>
                 <Image
                     className='aspect-[4/6] object-cover rounded-md grayscale hover:grayscale-50 duration-500 transition'
                     src={image}

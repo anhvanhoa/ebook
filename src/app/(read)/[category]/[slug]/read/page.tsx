@@ -29,36 +29,36 @@ const ebGaramond = EB_Garamond({
 });
 
 const stateDefault: Partial<EbookContextPageState> = {
-    // fileUrl: '/e.pdf',
-    typeFile: 'html',
-    totalPages: 6,
-    pages: [
-        {
-            content:
-                '<h2 style="text-align:center;">NASA</h2><p>Just a link: <a href="https://www.nasa.gov">www.nasa.gov</a> 1.</p>',
-            pageNumber: 1
-        },
-        {
-            content: '<h2>NASA</h2><p>Just a link: www.nasa.gov 2.</p>',
-            pageNumber: 2
-        },
-        {
-            content: '## NASA\nJust a link: www.nasa.gov 3.',
-            pageNumber: 3
-        },
-        {
-            content: '## NASA\nJust a link: www.nasa.gov 4.',
-            pageNumber: 4
-        },
-        {
-            content: '## NASA\nJust a link: www.nasa.gov 5.',
-            pageNumber: 5
-        },
-        {
-            content: '## NASA\nJust a link: www.nasa.gov 6.',
-            pageNumber: 6
-        }
-    ]
+    fileUrl: '/e.pdf',
+    typeFile: 'pdf',
+    // totalPages: 2,
+    // pages: [
+    //     {
+    //         content:
+    //             '<h2 style="text-align:center;">NASA</h2><p>Just a link: <a href="https://www.nasa.gov">www.nasa.gov</a> 1.</p>',
+    //         pageNumber: 1
+    //     },
+    //     {
+    //         content: '<h2>NASA</h2><p>Just a link: www.nasa.gov 2.</p>',
+    //         pageNumber: 2
+    //     },
+    //     {
+    //         content: '## NASA\nJust a link: www.nasa.gov 3.',
+    //         pageNumber: 3
+    //     },
+    //     {
+    //         content: '## NASA\nJust a link: www.nasa.gov 4.',
+    //         pageNumber: 4
+    //     },
+    //     {
+    //         content: '## NASA\nJust a link: www.nasa.gov 5.',
+    //         pageNumber: 5
+    //     },
+    //     {
+    //         content: '## NASA\nJust a link: www.nasa.gov 6.',
+    //         pageNumber: 6
+    //     }
+    // ],
     // images: [
     //     {
     //         alt: 'image 1',

@@ -6,8 +6,10 @@ import { useArrowKeyListener, useControll } from '@/hooks/useTriggerPdf';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GoPage from './GoPage';
+import { usePdf } from '@/provider/pdf/context';
 
 const Controll = () => {
+    const pdf = usePdf();
     const { handleNext, handlePrev } = useControll();
     useArrowKeyListener({
         onClickLeft: handlePrev,
@@ -15,20 +17,22 @@ const Controll = () => {
     });
     return (
         <>
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button
-                        size='icon'
-                        variant={'ghost'}
-                        className='hidden sm:flex font-normal cursor-pointer !text-blue-500'
-                    >
-                        <FileDigit />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className='p-2'>
-                    <GoPage />
-                </PopoverContent>
-            </Popover>
+            {pdf.state.typeFile !== 'image' && (
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            size='icon'
+                            variant={'ghost'}
+                            className='hidden sm:flex font-normal cursor-pointer !text-blue-500'
+                        >
+                            <FileDigit />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className='p-2'>
+                        <GoPage />
+                    </PopoverContent>
+                </Popover>
+            )}
             <Sheet>
                 <SheetTrigger asChild>
                     <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
@@ -41,9 +45,9 @@ const Controll = () => {
                         <SheetDescription asChild>
                             <Tabs defaultValue='toc' className='w-[400px]'>
                                 <TabsList>
-                                    <TabsTrigger value='toc'>Mục lục</TabsTrigger>
-                                    <TabsTrigger value='bookmark'>Dấu trang</TabsTrigger>
-                                    <TabsTrigger value='note'>Ghi chú</TabsTrigger>
+                                    <TabsTrigger className='text-xs xs:text-sm' value='toc'>Mục lục</TabsTrigger>
+                                    <TabsTrigger className='text-xs xs:text-sm' value='bookmark'>Dấu trang</TabsTrigger>
+                                    <TabsTrigger className='text-xs xs:text-sm' value='note'>Ghi chú</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value='toc'>Make changes to your account here.</TabsContent>
                                 <TabsContent value='bookmark'>Change your password here.</TabsContent>

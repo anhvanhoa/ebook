@@ -26,7 +26,7 @@ const HtmlViewer = () => {
         };
     }, [pdf.state.fontFamily, pdf.state.isMobile, pdf.state.scale, pdf.state.width]);
     return (
-        <div className='max-w-screen h-[calc(100vh-2.75rem)] overflow-auto'>
+        <div className='max-w-screen h-[calc(100vh-2.75rem)] overflow-auto custom-scrollbar'>
             <div className='flex w-fit mx-auto min-h-full'>
                 <div className='flex flex-col'>
                     <div

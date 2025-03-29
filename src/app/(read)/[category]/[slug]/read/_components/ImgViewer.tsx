@@ -13,7 +13,7 @@ const ImgViewer = ({ title }: ImgViewerProps) => {
     const pdf = usePdf();
     const [scale] = useDebounce(pdf.state.scale, 250);
     return (
-        <div className='mx-auto'>
+        <div className='mx-auto custom-scrollbar h-[calc(100vh-2.75rem)] overflow-auto'>
             {title && <Heading title={title} />}
             {pdf.state.images.map((img) => (
                 <Image
@@ -22,7 +22,7 @@ const ImgViewer = ({ title }: ImgViewerProps) => {
                     alt={img.alt}
                     width={pdf.state.width * scale}
                     height={pdf.state.height * scale}
-                    className='mx-auto border-x'
+                    className='mx-auto sm:border-x'
                 />
             ))}
         </div>
