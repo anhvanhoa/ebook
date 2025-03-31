@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import NumPage from './NumPage';
 import { cn } from '@/lib/utils';
 const classTypo =
-    'max-w-screen prose prose-stone max-w-none border-x flex-1 prose-h2:font-semibold px-6 pt-3 pb-1.5 prose-a:hover:text-pink-600 prose-a:transition-colors';
+    'max-w-screen prose prose-stone max-w-none flex-1 prose-h2:font-semibold px-6 pt-3 pb-1.5 prose-a:hover:text-pink-600 prose-a:transition-colors';
 const HtmlViewer = () => {
     const pdf = usePdf();
     const markdown = useMemo(() => {
@@ -14,7 +14,7 @@ const HtmlViewer = () => {
         };
     }, [pdf.state.pageNumber, pdf.state.pages]);
     const styleTypo = useMemo(() => {
-        let width = pdf.state.width * 1.2
+        let width = pdf.state.width * pdf.state.scale
         // tablet not scale
         if (pdf.state.isMobile) {
             width = pdf.state.width
