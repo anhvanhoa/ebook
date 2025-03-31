@@ -28,6 +28,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-pdf": "^9.2.1",
+    "react-reader": "^2.0.13",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",
     "unrar-js": "^0.2.3",
