@@ -13,6 +13,7 @@ import { stateDefault, usePdf } from '@/provider/pdf/context';
 import { useControll, useDoubleRightClick, useResize, useTripleClickListener } from '@/hooks/useTriggerPdf';
 import ControllMobi from './_components/ControllMobi';
 import { useRef } from 'react';
+import EpubViewer from './_components/EpubViewer';
 
 const Read = () => {
     const pdf = usePdf();
@@ -90,6 +91,7 @@ const Read = () => {
                 {pdf.state.typeFile === 'pdf' && <PdfViewer />}
                 {pdf.state.typeFile === 'html' && <HtmlViewer />}
                 {pdf.state.typeFile === 'image' && <ImgViewer />}
+                {pdf.state.typeFile === 'epub' && <EpubViewer />}
             </div>
             <ControllMobi />
         </div>

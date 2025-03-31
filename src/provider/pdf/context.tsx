@@ -24,7 +24,7 @@ type EbookContextPage = {
         background: string;
         color: string;
         viewMode: 'single' | 'double';
-        typeFile: 'pdf' | 'epub' | 'html' | 'image';
+        typeFile: 'pdf' | 'epub' | 'html' | 'image' | 'epub';
         pages: Page[];
         images: Img[];
         fontFamily?: string;
