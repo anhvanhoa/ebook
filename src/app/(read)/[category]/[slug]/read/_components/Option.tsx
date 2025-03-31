@@ -7,9 +7,10 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Columns2, Fullscreen, Minimize, RectangleVertical, SlidersVertical } from 'lucide-react';
+import { Columns2, Fullscreen, Minimize, Moon, RectangleVertical, SlidersVertical, Sun } from 'lucide-react';
 import { usePdf } from '@/provider/pdf/context';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 
 const colors = [
     { id: 1, name: 'Trắng ngà', bg: '#FFFFF0', color: '#000000' },
@@ -27,11 +28,12 @@ const fonts = [
     { name: 'EB Garamond', variable: '--font-eb-garamond' },
     { name: 'Geist Mono', variable: '--font-geist-mono' },
     { name: 'Geist', variable: '--font-geist-sans' },
-    { name: 'Mặc định', variable: '--font-default' },
+    { name: 'Mặc định', variable: '--font-default' }
 ];
 
 const Option = () => {
     const pdt = usePdf();
+    const { setTheme, theme } = useTheme();
     const [isFullScreen, setIsFullScreen] = React.useState(false);
     const handleViewMode = (mode: 'single' | 'double') => {
         let i = 0;
@@ -49,6 +51,11 @@ const Option = () => {
             setIsFullScreen(true);
         }
     };
+    const handleModeChange = () => {
+        if (theme === 'light') setTheme('dark');
+        else if (theme === 'dark') setTheme('light');
+        else setTheme('system');
+    };
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -57,7 +64,9 @@ const Option = () => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='p-0 overflow-hidden'>
-                <DropdownMenuLabel className='bg-gray-200 py-2 text-center text-xs'>Màu nền</DropdownMenuLabel>
+                <DropdownMenuLabel className='bg-gray-200 dark:bg-slate-700 py-2 text-center text-xs'>
+                    Màu nền
+                </DropdownMenuLabel>
                 <div className='grid grid-cols-5 py-1 px-1'>
                     {colors.map((color) => (
                         <DropdownMenuItem
@@ -74,7 +83,9 @@ const Option = () => {
                 </div>
                 {pdt.state.typeFile === 'html' && (
                     <>
-                        <DropdownMenuLabel className='bg-gray-200 py-2 text-center text-xs'>Font chữ</DropdownMenuLabel>
+                        <DropdownMenuLabel className='bg-gray-200 dark:bg-slate-700 py-2 text-center text-xs'>
+                            Font chữ
+                        </DropdownMenuLabel>
                         <div className='p-1'>
                             {fonts.map((font) => (
                                 <DropdownMenuItem
@@ -88,7 +99,9 @@ const Option = () => {
                         </div>
                     </>
                 )}
-                <DropdownMenuLabel className='bg-gray-200 py-2 text-center text-xs'>Tùy chỉnh</DropdownMenuLabel>
+                <DropdownMenuLabel className='bg-gray-200 dark:bg-slate-700 py-2 text-center text-xs'>
+                    Tùy chỉnh
+                </DropdownMenuLabel>
                 <div className='p-1'>
                     <DropdownMenuItem onClick={handleFullScreen} className='flex items-center cursor-pointer'>
                         {!isFullScreen && (
@@ -121,6 +134,10 @@ const Option = () => {
                     >
                         <Columns2 />
                         <span>2 trang</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className={cn('cursor-pointer')} onClick={handleModeChange}>
+                        {theme === 'light' ? <Moon /> : <Sun />}
+                        <span>{theme === 'light' ? 'Chế độ tối' : 'Chế độ sáng'}</span>
                     </DropdownMenuItem>
                 </div>
             </DropdownMenuContent>
