@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import NumPage from './NumPage';
 import { cn } from '@/lib/utils';
 const classTypo =
-    'max-w-screen prose prose-stone max-w-none flex-1 prose-h2:font-semibold px-6 pt-3 pb-1.5 prose-a:hover:text-pink-600 prose-a:transition-colors';
+    'max-w-screen prose prose-stone max-w-none border-x flex-1 prose-h2:font-semibold px-6 pt-3 pb-1.5 prose-a:hover:text-pink-600 prose-a:transition-colors';
 const HtmlViewer = () => {
     const pdf = usePdf();
     const markdown = useMemo(() => {
@@ -14,7 +14,7 @@ const HtmlViewer = () => {
         };
     }, [pdf.state.pageNumber, pdf.state.pages]);
     const styleTypo = useMemo(() => {
-        let width = pdf.state.width * pdf.state.scale
+        let width = pdf.state.width * 1.2
         // tablet not scale
         if (pdf.state.isMobile) {
             width = pdf.state.width
@@ -32,7 +32,8 @@ const HtmlViewer = () => {
                     <div
                         style={styleTypo}
                         className={cn(classTypo, {
-                            'prose-invert': pdf.state.color === '#FFFFFF'
+                            'prose-invert': pdf.state.color === '#FFFFFF',
+                            'dark:prose-invert': !pdf.state.color && !pdf.state.background
                         })}
                         dangerouslySetInnerHTML={{ __html: markdown.pageOne }}
                     ></div>
@@ -40,7 +41,7 @@ const HtmlViewer = () => {
                 </div>
                 {pdf.state.viewMode === 'double' && pdf.state.pageNumber + 1 <= pdf.state.totalPages && (
                     <>
-                        <div className='bg-gray-100 shrink-0' style={{ width: `${2 * pdf.state.scale}px` }}></div>
+                        <div className='bg-gray-100 shrink-0' style={{ width: `2px` }}></div>
                         <div className='flex flex-col'>
                             <div
                                 style={styleTypo}
