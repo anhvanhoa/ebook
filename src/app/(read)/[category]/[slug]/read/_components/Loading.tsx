@@ -6,7 +6,7 @@ type LoadingProps = {
 };
 
 const Loading = ({ className }: LoadingProps) => {
-    return <div className={cn('h-[calc(100vh-2.75rem)] bg-gray-200 animate-pulse', className)}></div>;
+    return <div className={cn('h-[calc(100vh-2.75rem)] bg-primary-foreground animate-pulse', className)}></div>;
 };
 
 export default Loading;

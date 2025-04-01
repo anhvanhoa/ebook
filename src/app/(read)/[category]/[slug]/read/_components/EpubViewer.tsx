@@ -1,6 +1,6 @@
 'use client';
 import { usePdf } from '@/provider/pdf/context';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EpubView } from 'react-reader';
 import { Rendition } from 'epubjs';
 import Loading from './Loading';
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 
 const EpubViewer = () => {
     const pdf = usePdf();
-    const [rendition, setRendition] = useState<Rendition | null>();
+    const [rendition, setRendition] = useState<Rendition | null>(null);
     const [location, setLocation] = useState<string | number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     useEffect(() => {
@@ -25,10 +25,14 @@ const EpubViewer = () => {
         return () => {
             clearTimeout(TimeID);
         };
-    }, [pdf.state.scale]);
+    }, [location, pdf.state.scale, rendition]);
     return (
-        <div className='overflow-x-auto h-[calc(100vh-2.75rem)] custom-scrollbar'>
-            {loading && <Loading />}
+        <div className='overflow-x-auto h-[calc(100vh-2.75rem)] custom-scrollbar relative'>
+            {loading && (
+                <div className='absolute w-full h-full bottom-0 z-50 bg-primary-foreground'>
+                    <Loading />
+                </div>
+            )}
             {pdf.state.fileUrl && (
                 <div
                     style={{ width: pdf.state.width * pdf.state.scale }}
@@ -37,10 +41,11 @@ const EpubViewer = () => {
                     })}
                 >
                     <EpubView
-                        loadingView={<Loading />}
                         url={pdf.state.fileUrl}
                         location={location}
-                        getRendition={(rendition) => setRendition(rendition)}
+                        getRendition={(rendition) => {
+                            setRendition(rendition);
+                        }}
                         epubOptions={{
                             spread: 'none',
                             flow: 'paginated'
