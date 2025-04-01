@@ -36,7 +36,7 @@ type EbookContextPage = {
 export type EbookContextPageState = EbookContextPage['state'];
 
 export const stateDefault: EbookContextPageState = {
-    width: 625,
+    width: 750,
     height: 884.125,
     pageNumber: 1,
     totalPages: 0,

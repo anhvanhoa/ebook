@@ -9,7 +9,7 @@ import { usePdf } from '@/provider/pdf/context';
 import { cn } from '@/lib/utils';
 import { useDebounce } from 'use-debounce';
 import { DocumentCallback, OnItemClickArgs } from 'react-pdf/dist/esm/shared/types.js';
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 const options = {
     cMapUrl: '/cmaps/',

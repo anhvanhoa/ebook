@@ -10,7 +10,7 @@ import Controll from './_components/Controll';
 import HtmlViewer from './_components/HtmlViewer';
 import ImgViewer from './_components/ImgViewer';
 import { stateDefault, usePdf } from '@/provider/pdf/context';
-import { useControll, useDoubleRightClick, useResize, useTripleClickListener } from '@/hooks/useTriggerPdf';
+import { useControll, useDoubleRightClick, useResize } from '@/hooks/useTriggerPdf';
 import ControllMobi from './_components/ControllMobi';
 import { useRef } from 'react';
 import EpubViewer from './_components/EpubViewer';
@@ -46,11 +46,11 @@ const Read = () => {
         }
     });
     const containerRef = useRef<HTMLDivElement>(null); // Ref đến thẻ div
-    useTripleClickListener({
-        onClickLeft: handlePrev,
-        onClickRight: handleNext,
-        ref: containerRef
-    });
+    // useTripleClickListener({
+    //     onClickLeft: handlePrev,
+    //     onClickRight: handleNext,
+    //     ref: containerRef
+    // });
     const handleRightClick = (_: MouseEvent, side: 'left' | 'right') => {
         if (side === 'left') handlePrev();
         else handleNext();
@@ -91,7 +91,7 @@ const Read = () => {
                 {pdf.state.typeFile === 'pdf' && <PdfViewer />}
                 {pdf.state.typeFile === 'html' && <HtmlViewer />}
                 {pdf.state.typeFile === 'image' && <ImgViewer />}
-                {pdf.state.fileUrl && pdf.state.typeFile === 'epub' && <EpubViewer fileUrl={pdf.state.fileUrl}  />}
+                {pdf.state.typeFile === 'epub' && <EpubViewer />}
             </div>
             <ControllMobi />
         </div>

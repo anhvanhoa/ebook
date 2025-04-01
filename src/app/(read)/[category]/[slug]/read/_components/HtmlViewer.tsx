@@ -41,7 +41,7 @@ const HtmlViewer = () => {
                 </div>
                 {pdf.state.viewMode === 'double' && pdf.state.pageNumber + 1 <= pdf.state.totalPages && (
                     <>
-                        <div className='bg-gray-100 shrink-0' style={{ width: `2px` }}></div>
+                        <div className='bg-gray-200 dark:bg-gray-100/40 shrink-0' style={{ width: `1px` }}></div>
                         <div className='flex flex-col'>
                             <div
                                 style={styleTypo}
