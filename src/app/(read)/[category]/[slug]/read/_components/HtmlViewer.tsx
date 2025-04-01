@@ -14,10 +14,10 @@ const HtmlViewer = () => {
         };
     }, [pdf.state.pageNumber, pdf.state.pages]);
     const styleTypo = useMemo(() => {
-        let width = pdf.state.width * pdf.state.scale
+        let width = pdf.state.width * pdf.state.scale;
         // tablet not scale
         if (pdf.state.isMobile) {
-            width = pdf.state.width
+            width = pdf.state.width;
         }
         return {
             width: width,
@@ -45,7 +45,10 @@ const HtmlViewer = () => {
                         <div className='flex flex-col'>
                             <div
                                 style={styleTypo}
-                                className={classTypo}
+                                className={cn(classTypo, {
+                                    'prose-invert': pdf.state.color === '#FFFFFF',
+                                    'dark:prose-invert': !pdf.state.color && !pdf.state.background
+                                })}
                                 dangerouslySetInnerHTML={{ __html: markdown.pageTwo }}
                             ></div>
                             <NumPage pageNumber={pdf.state.pageNumber + 1} totalPages={pdf.state.totalPages} />

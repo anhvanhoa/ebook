@@ -91,7 +91,7 @@ const Read = () => {
                 {pdf.state.typeFile === 'pdf' && <PdfViewer />}
                 {pdf.state.typeFile === 'html' && <HtmlViewer />}
                 {pdf.state.typeFile === 'image' && <ImgViewer />}
-                {pdf.state.fileUrl && pdf.state.typeFile === 'epub' && <EpubViewer  />}
+                {pdf.state.fileUrl && pdf.state.typeFile === 'epub' && <EpubViewer fileUrl={pdf.state.fileUrl}  />}
             </div>
             <ControllMobi />
         </div>
