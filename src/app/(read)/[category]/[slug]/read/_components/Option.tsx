@@ -81,7 +81,7 @@ const Option = () => {
                         </DropdownMenuItem>
                     ))}
                 </div>
-                {pdt.state.typeFile === 'html' && (
+                {['html', 'epub'].includes(pdt.state.typeFile) && (
                     <>
                         <DropdownMenuLabel className='bg-gray-200 dark:bg-slate-700 py-2 text-center text-xs'>
                             Font chữ
