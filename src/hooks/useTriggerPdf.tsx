@@ -62,10 +62,10 @@ export const useTripleClickListener = ({ onClickLeft, onClickRight, ref }: Props
 export const useArrowKeyListener = ({ onClickLeft, onClickRight }: Props = {}) => {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') && onClickLeft) {
+            if (e.key === 'ArrowLeft' && onClickLeft) {
                 onClickLeft();
             }
-            if ((e.key === 'ArrowRight' || e.key === 'ArrowUp') && onClickRight) {
+            if (e.key === 'ArrowRight' && onClickRight) {
                 onClickRight();
             }
         };
@@ -164,6 +164,7 @@ export const useResize = (callback: () => void) => {
 export const useControll = () => {
     const pdf = usePdf();
     const handleNext = () => {
+        if (pdf.state.typeFile === 'epub') return;
         if (pdf.state.viewMode === 'double') {
             if (pdf.state.pageNumber + 1 >= pdf.state.totalPages) return;
             pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber + 2 });
@@ -173,6 +174,7 @@ export const useControll = () => {
         pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber + 1 });
     };
     const handlePrev = () => {
+        if (pdf.state.typeFile === 'epub') return;
         if (pdf.state.pageNumber === 1) return;
         if (pdf.state.viewMode === 'double') {
             pdf.setState({ ...pdf.state, pageNumber: pdf.state.pageNumber - 2 });

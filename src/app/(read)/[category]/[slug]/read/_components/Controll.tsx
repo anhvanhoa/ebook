@@ -7,14 +7,24 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GoPage from './GoPage';
 import { usePdf } from '@/provider/pdf/context';
+import TableContent from './TableContent';
 
 const Controll = () => {
     const pdf = usePdf();
-    const { handleNext, handlePrev } = useControll();
+    const controll = useControll();
     useArrowKeyListener({
-        onClickLeft: handlePrev,
-        onClickRight: handleNext
+        onClickLeft: controll.handlePrev,
+        onClickRight: controll.handleNext
     });
+    const handlePrev = () => {
+        if (pdf.state.typeFile !== 'epub') return controll.handlePrev();
+        pdf.state.rendition?.prev();
+    };
+
+    const handleNext = () => {
+        if (pdf.state.typeFile !== 'epub') return controll.handleNext();
+        pdf.state.rendition?.next();
+    };
     return (
         <>
             {pdf.state.typeFile !== 'image' && (
@@ -39,21 +49,28 @@ const Controll = () => {
                         <NotebookTabs />
                     </Button>
                 </SheetTrigger>
-                <SheetContent>
-                    <SheetHeader>
+                <SheetContent className='!max-w-md'>
+                    <SheetHeader className='h-full'>
                         <SheetTitle className='sr-only'></SheetTitle>
-                        <SheetDescription asChild>
-                            <Tabs defaultValue='toc' className='w-[400px]'>
-                                <TabsList>
-                                    <TabsTrigger className='text-xs xs:text-sm' value='toc'>Mục lục</TabsTrigger>
-                                    <TabsTrigger className='text-xs xs:text-sm' value='bookmark'>Dấu trang</TabsTrigger>
-                                    <TabsTrigger className='text-xs xs:text-sm' value='note'>Ghi chú</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value='toc'>Make changes to your account here.</TabsContent>
-                                <TabsContent value='bookmark'>Change your password here.</TabsContent>
-                                <TabsContent value='note'>Change your password here.</TabsContent>
-                            </Tabs>
-                        </SheetDescription>
+                        <SheetDescription className='sr-only'></SheetDescription>
+                        <Tabs defaultValue='toc' className='h-full'>
+                            <TabsList>
+                                <TabsTrigger className='text-xs xs:text-sm' value='toc'>
+                                    Mục lục
+                                </TabsTrigger>
+                                <TabsTrigger className='text-xs xs:text-sm' value='bookmark'>
+                                    Dấu trang
+                                </TabsTrigger>
+                                <TabsTrigger className='text-xs xs:text-sm' value='note'>
+                                    Ghi chú
+                                </TabsTrigger>
+                            </TabsList>
+                            <TabsContent value='toc' className='overflow-auto flex-1 -mr-4 custom-scrollbar'>
+                                <TableContent data={pdf.state.tableContents} />
+                            </TabsContent>
+                            <TabsContent value='bookmark'>Change your password here.</TabsContent>
+                            <TabsContent value='note'>Change your password here.</TabsContent>
+                        </Tabs>
                     </SheetHeader>
                 </SheetContent>
             </Sheet>

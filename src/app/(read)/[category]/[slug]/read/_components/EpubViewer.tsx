@@ -1,50 +1,53 @@
 'use client';
 import { usePdf } from '@/provider/pdf/context';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EpubView } from 'react-reader';
-import { Rendition } from 'epubjs';
 import Loading from './Loading';
 import { useDebounce } from 'use-debounce';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import NumPage from './NumPage';
+import { convertNavToTableContent } from '@/lib/epub';
 
 const EpubViewer = () => {
     const pdf = usePdf();
-    const [rendition, setRendition] = useState<Rendition | null>(null);
     const [location, setLocation] = useState<string | number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [scale] = useDebounce(pdf.state.scale, 300);
     const { resolvedTheme } = useTheme();
-    useLayoutEffect(() => {
+    const locationChanged = (epubcfi: string) => {
+        if (pdf.state.rendition) {
+            pdf.setState({
+                ...pdf.state,
+                pageNumber: pdf.state.rendition?.location.start.index + 1,
+                totalPages: pdf.state.rendition?.book.packaging.spine.length
+            });
+        }
+        setLocation(epubcfi);
+    };
+    useEffect(() => {
         let TimeID: NodeJS.Timeout;
-        if (rendition) {
+        if (pdf.state.rendition) {
             setLoading(true);
             if (pdf.state.color && pdf.state.background) {
-                rendition.themes.override('color', pdf.state.color);
-                rendition.themes.override('background-color', pdf.state.background);
+                pdf.state.rendition.themes.override('color', pdf.state.color);
+                pdf.state.rendition.themes.override('background-color', pdf.state.background);
             } else {
                 if (resolvedTheme === 'dark') {
-                    rendition.themes.override('color', 'rgb(249,250,251)');
-                    rendition.themes.override('background-color', 'rgb(3,7,18)');
+                    pdf.state.rendition.themes.override('color', 'rgb(249,250,251)');
+                    pdf.state.rendition.themes.override('background-color', 'rgb(3,7,18)');
                 } else if (resolvedTheme === 'light') {
-                    rendition.themes.override('color', 'rgb(54,65,83)');
-                    rendition.themes.override('background-color', 'rgb(255,255,255)');
+                    pdf.state.rendition.themes.override('color', 'rgb(54,65,83)');
+                    pdf.state.rendition.themes.override('background-color', 'rgb(255,255,255)');
                 }
             }
-            if (rendition?.location?.start) {
-                pdf.setState((state) => ({
-                    ...state,
-                    pageNumber: rendition.location.start.displayed.page,
-                    totalPages: rendition.location.start.displayed.total
-                }));
-            }
-            if (pdf.state.fontFamily) rendition.themes.override('font-family', `var(${pdf.state.fontFamily})`);
-            rendition.themes.fontSize(`${16 * scale}px`);
-            rendition.themes.override('line-height', `${1.6 * scale}rem`);
-            rendition.spread(pdf.state.viewMode === 'double' ? 'always' : 'none');
-            rendition.flow(pdf.state.viewMode === 'double' ? 'paginated' : 'paginated');
-            rendition.display(String(location));
+            if (pdf.state.fontFamily)
+                pdf.state.rendition.themes.override('font-family', `var(${pdf.state.fontFamily})`);
+            pdf.state.rendition.themes.fontSize(`${16 * scale}px`);
+            pdf.state.rendition.themes.override('line-height', `${1.6 * scale}rem`);
+            pdf.state.rendition.spread(pdf.state.viewMode === 'double' ? 'always' : 'none');
+            pdf.state.rendition.flow(pdf.state.viewMode === 'double' ? 'paginated' : 'paginated');
+            pdf.state.rendition.display(String(location));
             TimeID = setTimeout(() => {
                 setLoading(false);
             }, 500);
@@ -54,7 +57,7 @@ const EpubViewer = () => {
         };
     }, [
         scale,
-        rendition,
+        pdf.state.rendition,
         pdf.state.viewMode,
         pdf.state.fontFamily,
         pdf.state.background,
@@ -79,16 +82,26 @@ const EpubViewer = () => {
                     })}
                 >
                     <EpubView
-                        epubOptions={{ stylesheet: '/css/epub.css' }}
-                        url={pdf.state.fileUrl}
-                        location={location}
-                        getRendition={(rendition) => setRendition(rendition)}
-                        locationChanged={async (epubcfi: string) => {
-                            console.log(rendition?.book.packaging.spine);
-                            setLocation(epubcfi);
+                        epubOptions={{
+                            stylesheet: '/epub/base.min.css',
+                            allowScriptedContent: true,
+                            script: '/epub/index.min.js'
                         }}
+                        url={pdf.state.fileUrl}
+                        tocChanged={(value) =>
+                            pdf.setState((s) => ({ ...s, tableContents: convertNavToTableContent(value) }))
+                        }
+                        location={location}
+                        getRendition={(rendition) => pdf.setState((s) => ({ ...s, rendition }))}
+                        locationChanged={locationChanged}
                     />
-                    <NumPage pageNumber={pdf.state.pageNumber} totalPages={pdf.state.totalPages} />
+                    {!!pdf.state.totalPages && (
+                        <NumPage
+                            className='fixed w-full left-0 '
+                            pageNumber={pdf.state.pageNumber}
+                            totalPages={pdf.state.totalPages}
+                        />
+                    )}
                 </div>
             )}
         </div>

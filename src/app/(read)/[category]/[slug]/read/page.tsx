@@ -1,9 +1,9 @@
 import EbookProvider, { EbookContextPageState } from '@/provider/pdf/context';
 import Read from './Read';
 const stateDefault: Partial<EbookContextPageState> = {
-    fileUrl: 'http://127.0.0.1:8080/e.epub',
-    // fileUrl: '/go-book.pdf',
-    typeFile: 'epub'
+    // fileUrl: 'http://127.0.0.1:8080/e.epub',
+    fileUrl: '/go-book.pdf',
+    typeFile: 'pdf'
     // totalPages: 6,
     //     pages: [
     //         {

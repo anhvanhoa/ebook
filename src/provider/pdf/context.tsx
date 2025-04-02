@@ -1,4 +1,5 @@
 'use client';
+import { Rendition } from 'epubjs';
 import React from 'react';
 
 type Page = {
@@ -13,8 +14,16 @@ type Img = {
     id: string;
 };
 
+export type TableContent = {
+    label: string;
+    href: string;
+    children?: TableContent[];
+    onClick?: (...arg: any[]) => void;
+};
+
 type EbookContextPage = {
     state: {
+        rendition: Rendition | null;
         width: number;
         height: number;
         pageNumber: number;
@@ -29,6 +38,7 @@ type EbookContextPage = {
         images: Img[];
         fontFamily?: string;
         isMobile: boolean;
+        tableContents: TableContent[];
     };
     setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
@@ -48,6 +58,8 @@ export const stateDefault: EbookContextPageState = {
     pages: [],
     images: [],
     isMobile: false,
+    rendition: null,
+    tableContents: []
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({

@@ -20,6 +20,9 @@ const GoPage = ({ className }: GoPageProps) => {
         const value = Number(pageNumber);
         if (isNaN(value)) return;
         if (value > pdf.state.totalPages || value < 1) return;
+        if (pdf.state.typeFile === 'epub') {
+            return pdf.state.rendition?.display(value - 1);
+        }
         pdf.setState({ ...pdf.state, pageNumber: value });
     };
     const onGoPage = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -27,6 +30,9 @@ const GoPage = ({ className }: GoPageProps) => {
             const value = Number(e.currentTarget.value);
             if (isNaN(value)) return;
             if (value > pdf.state.totalPages || value < 1) return;
+            if (pdf.state.typeFile === 'epub') {
+                return pdf.state.rendition?.display(value - 1);
+            }
             pdf.setState({ ...pdf.state, pageNumber: value });
         }
     };

@@ -52,8 +52,13 @@ const Read = () => {
     //     ref: containerRef
     // });
     const handleRightClick = (_: MouseEvent, side: 'left' | 'right') => {
-        if (side === 'left') handlePrev();
-        else handleNext();
+        if (side === 'left') {
+            if (pdf.state.typeFile !== 'epub') return handlePrev();
+            pdf.state.rendition?.prev();
+        } else {
+            if (pdf.state.typeFile !== 'epub') return handleNext();
+            pdf.state.rendition?.next();
+        }
     };
     useDoubleRightClick(containerRef, handleRightClick);
     return (
