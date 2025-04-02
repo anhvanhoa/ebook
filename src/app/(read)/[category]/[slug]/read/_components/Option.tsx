@@ -15,20 +15,17 @@ import { useTheme } from 'next-themes';
 const colors = [
     { id: 1, name: 'Trắng ngà', bg: '#FFFFF0', color: '#000000' },
     { id: 2, name: 'Beige', bg: '#F5F5DC', color: '#000000' },
-    { id: 3, name: 'Xám tro', bg: '#3a3a3a', color: '#FFFFFF' },
-    { id: 4, name: 'Xanh pastel', bg: '#fff', color: '#000' },
+    { id: 3, name: 'Xanh pastel', bg: '#FFFFFF', color: '#000000' },
+    { id: 4, name: 'Xám tro', bg: '#3a3a3a', color: '#FFFFFF' },
     { id: 5, name: 'Đen tuyền', bg: '#000000', color: '#FFFFFF' }
 ];
 
 const fonts = [
-    { name: 'Noto Serif', variable: '--font-noto-serif' },
-    { name: 'Lora', variable: '--font-lora' },
-    { name: 'Merriweather', variable: '--font-merriweather' },
-    { name: 'Roboto Slab', variable: '--font-roboto-slab' },
-    { name: 'EB Garamond', variable: '--font-eb-garamond' },
-    { name: 'Geist Mono', variable: '--font-geist-mono' },
-    { name: 'Geist', variable: '--font-geist-sans' },
-    { name: 'Mặc định', variable: '--font-default' }
+    { name: 'Bad Script', variable: '--font-bad-script' },
+    { name: 'Darker Grotesque', variable: '--font-darker-grotesque' },
+    { name: 'Philosopher', variable: '--font-philosopher' },
+    { name: 'Playwrite ES Deco', variable: '--font-playwrite-es-deco' },
+    { name: 'Ysabeau Infant', variable: '--font-ysabeau-infant' }
 ];
 
 const Option = () => {
@@ -90,7 +87,9 @@ const Option = () => {
                             {fonts.map((font) => (
                                 <DropdownMenuItem
                                     key={font.name}
-                                    className='cursor-pointer'
+                                    className={cn('cursor-pointer', {
+                                        '!text-blue-500 *:stroke-blue-500': pdt.state.fontFamily === font.variable
+                                    })}
                                     onClick={() => pdt.setState({ ...pdt.state, fontFamily: font.variable })}
                                 >
                                     <span>{font.name}</span>
@@ -103,20 +102,22 @@ const Option = () => {
                     Tùy chỉnh
                 </DropdownMenuLabel>
                 <div className='p-1'>
-                    <DropdownMenuItem onClick={handleFullScreen} className='flex items-center cursor-pointer'>
-                        {!isFullScreen && (
-                            <>
-                                <Fullscreen />
-                                <span>Đẩy đủ màn hình</span>
-                            </>
-                        )}
-                        {isFullScreen && (
-                            <>
-                                <Minimize />
-                                <span>Thu nhỏ màn hình</span>
-                            </>
-                        )}
-                    </DropdownMenuItem>
+                    {!pdt.state.isMobile && (
+                        <DropdownMenuItem onClick={handleFullScreen} className='flex items-center cursor-pointer'>
+                            {!isFullScreen && (
+                                <>
+                                    <Fullscreen />
+                                    <span>Đẩy đủ màn hình</span>
+                                </>
+                            )}
+                            {isFullScreen && (
+                                <>
+                                    <Minimize />
+                                    <span>Thu nhỏ màn hình</span>
+                                </>
+                            )}
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                         className={cn('cursor-pointer', {
                             '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'single'
@@ -126,15 +127,17 @@ const Option = () => {
                         <RectangleVertical />
                         <span>1 trang</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className={cn('cursor-pointer', {
-                            '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'double'
-                        })}
-                        onClick={() => handleViewMode('double')}
-                    >
-                        <Columns2 />
-                        <span>2 trang</span>
-                    </DropdownMenuItem>
+                    {!pdt.state.isMobile && (
+                        <DropdownMenuItem
+                            className={cn('cursor-pointer', {
+                                '!text-blue-500 *:stroke-blue-500': pdt.state.viewMode === 'double'
+                            })}
+                            onClick={() => handleViewMode('double')}
+                        >
+                            <Columns2 />
+                            <span>2 trang</span>
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem className={cn('cursor-pointer')} onClick={handleModeChange}>
                         {theme === 'light' ? <Moon /> : <Sun />}
                         <span>{theme === 'light' ? 'Chế độ tối' : 'Chế độ sáng'}</span>

@@ -60,7 +60,7 @@ const Read = () => {
         <div style={{ backgroundColor: pdf.state.background, color: `${pdf.state.color}` }}>
             <div
                 style={{ backgroundColor: pdf.state.background }}
-                className='mx-auto sticky top-0 z-10 grid grid-cols-2 sm:grid-cols-3 py-1 px-2 items-center justify-between'
+                className='mx-auto sticky top-0 z-10 grid grid-cols-2 sm:grid-cols-3 py-1 px-2 items-center justify-between max-w-screen-xl'
             >
                 <div className='flex items-center justify-start'>
                     <Button

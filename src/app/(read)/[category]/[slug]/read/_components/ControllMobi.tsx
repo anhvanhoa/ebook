@@ -16,11 +16,11 @@ const ControllMobi = () => {
     const pdf = usePdf();
     const { handleNext, handlePrev } = useControll();
     return (
-        <div className='sm:hidden z-50 fixed bottom-2.5 right-2.5 flex items-center justify-between gap-x-1'>
+        <div className='sm:hidden z-50 fixed bottom-1 right-2.5 flex items-center justify-between gap-x-1'>
             <Button
                 onClick={handlePrev}
                 size='icon'
-                variant={'secondary'}
+                variant={'ghost'}
                 className='rounded-full shadow-2xl font-normal cursor-pointer !text-blue-500'
             >
                 <ChevronLeft />
@@ -28,14 +28,14 @@ const ControllMobi = () => {
             <Button
                 onClick={handleNext}
                 size='icon'
-                variant={'secondary'}
+                variant={'ghost'}
                 className='rounded-full shadow-2xl font-normal cursor-pointer !text-blue-500'
             >
                 <ChevronRight />
             </Button>
             <Button
                 size='icon'
-                variant={'secondary'}
+                variant={'ghost'}
                 className='rounded-full shadow-2xl font-normal cursor-pointer !text-blue-500'
             >
                 <Bookmark />
@@ -44,7 +44,7 @@ const ControllMobi = () => {
                 <DropdownMenuTrigger asChild>
                     <Button
                         size='icon'
-                        variant={'secondary'}
+                        variant={'ghost'}
                         className='rounded-full shadow-2xl font-normal cursor-pointer !text-blue-500'
                     >
                         <EllipsisVertical />
