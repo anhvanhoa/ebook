@@ -55,6 +55,7 @@ const EpubViewer = () => {
         return () => {
             clearTimeout(TimeID);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         scale,
         pdf.state.rendition,

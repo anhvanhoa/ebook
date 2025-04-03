@@ -10,9 +10,28 @@ import { cn } from '@/lib/utils';
 import { useDebounce } from 'use-debounce';
 import { DocumentCallback, OnItemClickArgs } from 'react-pdf/dist/esm/shared/types.js';
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
+
+class Ref {
+    num: number;
+    gen: number;
+
+    constructor({ num, gen }: { num: number; gen: number }) {
+        this.num = num;
+        this.gen = gen;
+    }
+
+    toString(): string {
+        let str = `${this.num}R`;
+        if (this.gen !== 0) {
+            str += this.gen;
+        }
+        return str;
+    }
+}
 
 const options = {
-    cMapUrl: '/cmaps/',
+    cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
     standardFontDataUrl: '/standard_fonts/'
 };
 
@@ -21,6 +40,8 @@ const PdfViewer = () => {
     const viewerRef = React.useRef<HTMLDivElement>(null);
     const [scale] = useDebounce(pdf.state.scale, 250);
     async function onDocumentLoadSuccess(e: DocumentCallback) {
+        console.log(e.getPageIndex(new Ref({ num: 23, gen: 0 })));
+        console.log(e.getOutline());
         pdf.setState({ ...pdf.state, totalPages: e.numPages });
     }
     const handleGoPageByTOF = (e: OnItemClickArgs) => {
