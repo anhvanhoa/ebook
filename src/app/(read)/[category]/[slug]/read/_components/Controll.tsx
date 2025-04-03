@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GoPage from './GoPage';
 import { usePdf } from '@/provider/pdf/context';
 import TableContent from './TableContent';
+import { cn } from '@/lib/utils';
+import BookMark from './BookMark';
 
 const Controll = () => {
     const pdf = usePdf();
@@ -24,6 +26,53 @@ const Controll = () => {
     const handleNext = () => {
         if (pdf.state.typeFile !== 'epub') return controll.handleNext();
         pdf.state.rendition?.next();
+    };
+    const bookMark = () => {
+        const pageNumber = pdf.state.pageNumber.toString();
+        const isBookMark = pdf.state.bookMarks.some((item) => item.href === pageNumber);
+        if (isBookMark) {
+            pdf.setState((state) => {
+                return {
+                    ...state,
+                    bookMarks: state.bookMarks.filter((item) => item.href !== pageNumber)
+                };
+            });
+        } else {
+            if (pdf.state.typeFile === 'pdf') {
+                pdf.setState((state) => {
+                    return {
+                        ...state,
+                        bookMarks: [
+                            ...state.bookMarks,
+                            {
+                                label: `Trang ${pageNumber}`,
+                                href: pageNumber,
+                                onClick: () =>
+                                    pdf.setState((state) => ({
+                                        ...state,
+                                        pageNumber: Number(pageNumber)
+                                    }))
+                            }
+                        ]
+                    };
+                });
+            }
+            if (pdf.state.typeFile === 'epub') {
+                pdf.setState((state) => {
+                    return {
+                        ...state,
+                        bookMarks: [
+                            ...state.bookMarks,
+                            {
+                                label: `Trang ${pageNumber}`,
+                                href: pageNumber,
+                                onClick: () => pdf.state.rendition?.display(Number(pageNumber) - 1)
+                            }
+                        ]
+                    };
+                });
+            }
+        }
     };
     return (
         <>
@@ -61,21 +110,30 @@ const Controll = () => {
                                 <TabsTrigger className='text-xs xs:text-sm' value='bookmark'>
                                     Dấu trang
                                 </TabsTrigger>
-                                <TabsTrigger className='text-xs xs:text-sm' value='note'>
-                                    Ghi chú
-                                </TabsTrigger>
                             </TabsList>
                             <TabsContent value='toc' className='overflow-auto flex-1 -mr-4 custom-scrollbar'>
                                 <TableContent data={pdf.state.tableContents} />
                             </TabsContent>
-                            <TabsContent value='bookmark'>Change your password here.</TabsContent>
-                            <TabsContent value='note'>Change your password here.</TabsContent>
+                            <TabsContent value='bookmark'>
+                                <BookMark data={pdf.state.bookMarks} />
+                            </TabsContent>
                         </Tabs>
                     </SheetHeader>
                 </SheetContent>
             </Sheet>
-            <Button size='icon' variant={'ghost'} className='font-normal cursor-pointer !text-blue-500'>
-                <Bookmark />
+            <Button
+                onClick={bookMark}
+                size='icon'
+                variant={'ghost'}
+                className='font-normal cursor-pointer !text-blue-500'
+            >
+                <Bookmark
+                    className={cn({
+                        'fill-yellow-400 stroke-yellow-400': pdf.state.bookMarks.some(
+                            (item) => item.href === pdf.state.pageNumber.toString()
+                        )
+                    })}
+                />
             </Button>
             <Button
                 onClick={handlePrev}

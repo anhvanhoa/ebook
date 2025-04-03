@@ -10,7 +10,7 @@ const Header = () => {
                     <Home size={16} className='dark:stroke-blue-500' />
                 </Link>
                 <div className='space-x-2 flex items-center'>
-                    {/* <p className='flex items-center space-x-1 mr-3'>
+                    <p className='flex items-center space-x-1 mr-3'>
                         <Link href='/login' className='text-sm text-blue-500 hover:underline transition'>
                             Đăng nhập
                         </Link>
@@ -18,7 +18,7 @@ const Header = () => {
                         <Link href='/sign-up' className='text-sm text-blue-500 hover:underline transition'>
                             Đăng ký
                         </Link>
-                    </p> */}
+                    </p>
                     <ModeToggle />
                     {/* <Button variant={'outline'} className='h-auto !p-1 !text-blue-500'>
                 <User size={16} />

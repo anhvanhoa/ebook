@@ -90,7 +90,7 @@ const EpubViewer = () => {
                         }}
                         url={pdf.state.fileUrl}
                         tocChanged={(value) =>
-                            pdf.setState((s) => ({ ...s, tableContents: convertNavToTableContent(value) }))
+                            pdf.setState((s) => ({ ...s, tableContents: convertNavToTableContent(value, setLocation) }))
                         }
                         location={location}
                         getRendition={(rendition) => pdf.setState((s) => ({ ...s, rendition }))}

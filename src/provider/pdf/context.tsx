@@ -21,6 +21,12 @@ export type TableContent = {
     onClick?: (...arg: any[]) => void;
 };
 
+export type BookMark = {
+    label: string;
+    href: string;
+    onClick?: (...arg: any[]) => void;
+};
+
 type EbookContextPage = {
     state: {
         rendition: Rendition | null;
@@ -39,6 +45,7 @@ type EbookContextPage = {
         fontFamily?: string;
         isMobile: boolean;
         tableContents: TableContent[];
+        bookMarks: BookMark[];
     };
     setState: React.Dispatch<React.SetStateAction<EbookContextPage['state']>>;
 };
@@ -59,7 +66,8 @@ export const stateDefault: EbookContextPageState = {
     images: [],
     isMobile: false,
     rendition: null,
-    tableContents: []
+    tableContents: [],
+    bookMarks: [],
 };
 
 export const EbookContext = React.createContext<EbookContextPage>({
