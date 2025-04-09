@@ -4,6 +4,9 @@ import Image from 'next/image';
 import React from 'react';
 import Ebook from './_components/Ebook';
 import Link from 'next/link';
+import apiEbook from '@/api/ebook';
+import images from '@/asset/images';
+import { notFound } from 'next/navigation';
 
 const res = {
     title: 'Wow người đọc',
@@ -43,7 +46,14 @@ const res = {
         '<p>Tom Đánh cá không thể ngờ được có ngày anh lại bị chỉ định làm kẻ tội phạm.</p><p>Chuyện xảy ra vào buổi sáng. Mặt trời to màu đỏ vừa nhô lên khỏi đường chân trờicùng với người bạn đồng hành màu vàng nhỏ bé lê bước theo nó. Một ngôi làng xinhxắn, ngăn nắp – cái chấm trắng kì dị giữa khoảng không xanh rờn của hành tinh –ánh lên dưới tia nắng hè của hai mặt trời của nó. </p> <p> Tom vừa thức dậy trong căn nhà nhỏ của anh. Đó là một thanh niên cao lớn với nước da rám đỏ vì mặt trời, với đuôi mắt dài thừa hưởng từ người cha và tính nết thật thà không muốn mua việc vào người thừa hưởng từ người mẹ. Tom không vội: từ nay đến khi có những trận mưa thu người ta không đi đánh cá, nghĩa là với người đánh cá chưa có công việc gì thực sự phải làm. Từ giờ đến mùa thu anh có ý định dềnh dàng một chút và sửa chữa lại mấy cái đồ nghề đánh cá.</p>'
 };
 
-const page = () => {
+type DetailPageProps = {
+    params: Promise<{ category: string; slug: string }>;
+};
+
+const DetailPage = async (props: DetailPageProps) => {
+    const params = await props.params;
+    const ebook = await apiEbook.getEbookPageDetail(params);
+    if (!ebook) notFound();
     return (
         <div>
             <div className='relative bg-black'>
@@ -53,7 +63,7 @@ const page = () => {
                             <div className='shrink-0'>
                                 <Image
                                     className='w-32 sm:w-36 md:w-52 aspect-[4/6] rounded-md'
-                                    src={res.image}
+                                    src={res.image ?? images.ebookDefault}
                                     alt={res.title}
                                     width={300}
                                     height={500}
@@ -65,7 +75,7 @@ const page = () => {
                                 >
                                     {res.chapter} chương
                                 </p>
-                                <h2 className='text-2xl sm:text-3xl md:text-5xl font-semibold mt-3'>{res.title}</h2>
+                                <h2 className='text-2xl sm:text-3xl md:text-4xl font-semibold mt-3'>{res.title}</h2>
                                 <p className='text-white/70 mt-1'>{res.status}</p>
                                 <div className='mt-3 flex items-end gap-x-2'>
                                     <p className='text-xs leading-3 text-white/50'>37.6k lượt xem</p>
@@ -183,4 +193,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default DetailPage;

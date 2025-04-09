@@ -1,0 +1,243 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  reader
+  author
+  admin
+}
+
+enum Format {
+  pdf
+  epub
+  mobi
+  azw3
+  fb2
+  djvu
+  txt
+  docx
+  rtf
+  html
+  cbz
+  cbr
+}
+
+enum EbookStatus {
+  draft
+  published
+  archived
+}
+
+model User {
+  id              String            @id @default(cuid())
+  username        String            @unique
+  email           String            @unique
+  passwordHash    String
+  fullName        String?
+  birthday        DateTime?
+  gender          String?
+  phone           String?           @unique
+  avatar          String?
+  role            Role              @default(reader)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now())
+  author          Author?
+  readingHistory  ReadingHistory[]
+  downloads       Download[]
+  bookmarks       Bookmark[]
+  favorites       Favorite[]
+  reviews         Review[]
+  settings        ReadingSettings?
+  likes           EbookLike[]
+  follows         EbookFollow[]
+}
+
+model Author {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  penName   String?
+  bio       String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebooks    Ebook[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  ebooks      EbookCategory[]
+}
+
+model Ebook {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  title           String
+  description     String?
+  summary         String?
+  authorId        String?
+  coverImage      String?
+  language        String?
+  source          String?
+  publishedDate   DateTime?
+  status          EbookStatus    @default(draft)
+  views           Int            @default(0)
+  createdAt       DateTime       @default(now())
+
+  author          Author?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  categories      EbookCategory[]
+  formats         EbookFormat[]
+  series          EbookSeries[]
+  readingHistory  ReadingHistory[]
+  downloads       Download[]
+  bookmarks       Bookmark[]
+  favorites       Favorite[]
+  reviews         Review[]
+  likes           EbookLike[]
+  follows         EbookFollow[]
+}
+
+model EbookCategory {
+  id         String   @id @default(cuid())
+  ebookId    String
+  categoryId String
+
+  ebook      Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([ebookId, categoryId])
+}
+
+model EbookFormat {
+  id       String  @id @default(cuid())
+  ebookId  String
+  format   Format
+  filePath String
+
+  ebook    Ebook  @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+
+  @@unique([ebookId, format])
+}
+
+model BookSeries {
+  id          String        @id @default(cuid())
+  seriesName  String        @unique
+  description String?
+  ebooks      EbookSeries[]
+}
+
+model EbookSeries {
+  id           String   @id @default(cuid())
+  seriesId     String
+  ebookId      String
+  volumeNumber Int
+
+  series       BookSeries @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  ebook        Ebook      @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+}
+
+model ReadingHistory {
+  id         String   @id @default(cuid())
+  userId     String
+  ebookId    String
+  lastReadAt DateTime @default(now())
+  progress   Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook      Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+}
+
+model Download {
+  id           String   @id @default(cuid())
+  userId       String
+  ebookId      String
+  downloadedAt DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook        Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  chapter   String?
+  position  String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+}
+
+model ReadingSettings {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  fontSize        Int      @default(16)
+  backgroundColor String   @default("white")
+  textColor       String   @default("black")
+  lineSpacing     Float    @default(1.5)
+  theme           String   @default("light")
+  updatedAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EbookLike {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, ebookId])
+}
+
+model EbookFollow {
+  id        String   @id @default(cuid())
+  userId    String
+  ebookId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, ebookId])
+}

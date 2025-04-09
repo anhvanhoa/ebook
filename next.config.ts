@@ -8,7 +8,17 @@ const nextConfig: NextConfig = {
                 canvas: './empty-module.ts'
             }
         }
-    }
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'nhasachmienphi.com',
+                port: '',
+                pathname: '/**'
+            }
+        ]
+    },
 };
 
 export default nextConfig;
