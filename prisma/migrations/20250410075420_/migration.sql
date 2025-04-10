@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "Voice" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "ebookId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "fileUrl" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Voice_ebookId_fkey" FOREIGN KEY ("ebookId") REFERENCES "Ebook" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

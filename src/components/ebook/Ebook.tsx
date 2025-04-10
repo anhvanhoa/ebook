@@ -2,7 +2,7 @@ import images from '@/asset/images';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { RefObject } from 'react';
 
 type EbookProps = {
     title: string;
@@ -10,12 +10,13 @@ type EbookProps = {
     category?: string;
     image?: string | null;
     className?: string;
+    ref?: RefObject<HTMLDivElement | null>;
 };
 
-const Ebook = ({ category, image, slug, title, className }: EbookProps) => {
+const Ebook = ({ category, image, slug, title, className, ref }: EbookProps) => {
     return (
         <Link href={`/${slug}`} className={cn('flex items-center justify-center flex-col group', className)}>
-            <div className='rounded-md bg-gray-50 dark:bg-gray-700 p-1.5'>
+            <div ref={ref} className='rounded-md bg-gray-50 dark:bg-gray-700 p-1.5'>
                 <Image
                     className='aspect-[4/6] object-cover rounded-md grayscale hover:grayscale-50 duration-500 transition'
                     src={image ?? images.ebookDefault}

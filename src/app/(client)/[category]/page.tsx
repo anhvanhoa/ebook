@@ -23,7 +23,7 @@ export default async function EbooksPage({ params }: EbookPageProps) {
                             key={book.id}
                             category={book.categories.map((cat) => cat.category.name).join(', ')}
                             image={book.coverImage}
-                            slug={`s/${book.slug}`}
+                            slug={`${cate.slug}/${book.slug}`}
                             title={book.title}
                         />
                     ))}

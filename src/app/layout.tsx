@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { geistMono, geistSans } from '@/lib/font';
+import AppContext from './app-context';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -14,12 +15,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang='en' suppressHydrationWarning>
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <ThemeProvider attribute='class' defaultTheme='light'>
-                    {children}
-                </ThemeProvider>
-            </body>
-        </html>
+        <AppContext>
+            <html lang='en' suppressHydrationWarning>
+                <body className={`${geistSans.variable} ${geistMono.variable}`}>
+                    <ThemeProvider attribute='class' defaultTheme='light'>
+                        {children}
+                    </ThemeProvider>
+                </body>
+            </html>
+        </AppContext>
     );
 }

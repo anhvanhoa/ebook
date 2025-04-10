@@ -107,6 +107,17 @@ model Ebook {
   reviews         Review[]
   likes           EbookLike[]
   follows         EbookFollow[]
+  voices          Voice[]
+}
+
+model Voice {
+  id        String   @id @default(cuid())
+  ebookId   String
+  name      String
+  fileUrl   String
+  createdAt DateTime @default(now())
+
+  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model EbookCategory {
