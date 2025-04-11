@@ -1,7 +1,6 @@
 import apiEbook from '@/api/ebook';
-import Ebook from '@/components/ebook';
+import Ebook, { EbookScroll } from '@/components/ebook';
 import Heading from '@/components/heading';
-import EbookScroll from './_components/EbookScroll';
 export default async function Home() {
     const books = await apiEbook.getEbookHome();
     return (
@@ -21,102 +20,6 @@ export default async function Home() {
                             />
                         );
                     })}
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
-                    <Ebook
-                        category={'Science Fiction'}
-                        image={'/images/ebook.webp'}
-                        slug={'sci-fi'}
-                        title={"The Hitchhiker's Guide to the Galaxy"}
-                    />
                 </EbookScroll>
             </div>
         </div>

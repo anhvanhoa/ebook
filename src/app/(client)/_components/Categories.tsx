@@ -20,7 +20,7 @@ const Categories = async () => {
                             <CarouselItem key={i} className='pl-2 text-sm md:basis-1/7 sm:basis-1/5 basis-1/3'>
                                 <Link
                                     key={category.id}
-                                    href={category.slug}
+                                    href={`/${category.slug}`}
                                     className='block py-2 text-center hover:underline underline-offset-1'
                                 >
                                     <span className='line-clamp-1'>

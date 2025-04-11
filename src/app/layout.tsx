@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { geistMono, geistSans } from '@/lib/font';
 import AppContext from './app-context';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -20,6 +21,7 @@ export default function RootLayout({
                 <body className={`${geistSans.variable} ${geistMono.variable}`}>
                     <ThemeProvider attribute='class' defaultTheme='light'>
                         {children}
+                        <Toaster />
                     </ThemeProvider>
                 </body>
             </html>

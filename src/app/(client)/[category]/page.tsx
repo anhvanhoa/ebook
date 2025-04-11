@@ -1,6 +1,6 @@
 import apiCategory from '@/api/category';
 import apiEbook from '@/api/ebook';
-import Ebook from '@/components/ebook';
+import Ebook, { EbookScroll } from '@/components/ebook';
 import Heading from '@/components/heading';
 import { notFound } from 'next/navigation';
 
@@ -17,8 +17,8 @@ export default async function EbooksPage({ params }: EbookPageProps) {
         <div>
             <Heading title={cate.name} />
             <div className='max-w-screen-lg mx-auto'>
-                <div className='py-2 grid grid-cols-5 gap-x-2 gap-y-6'>
-                    {ebooks.map((book) => (
+                <EbookScroll type='category' slugCategory={cate.slug}>
+                    {ebooks.data.map((book) => (
                         <Ebook
                             key={book.id}
                             category={book.categories.map((cat) => cat.category.name).join(', ')}
@@ -27,7 +27,7 @@ export default async function EbooksPage({ params }: EbookPageProps) {
                             title={book.title}
                         />
                     ))}
-                </div>
+                </EbookScroll>
             </div>
         </div>
     );
