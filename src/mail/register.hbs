@@ -1,10 +1,11 @@
-<h1>Welcome to Our Platform!</h1>
-<p>Hi {{name}},</p>
-<p>Thank you for registering with us. Please confirm your email address by clicking the button below:</p>
-<a
-    href='{{confirmationLink}}'
-    style='display: inline-block; padding: 10px 20px; color: #fff; background-color: #007BFF; text-decoration: none; border-radius: 5px;'
->Confirm Email</a>
-<p>If you did not register, please ignore this email.</p>
-<p>Best regards,</p>
-<p>The Team</p>
+<div>
+    {{#if name}}
+        <h4>Xin chào {{name}},</h4>
+    {{else}}
+        <h4>Xin chào {{email}},</h4>
+    {{/if}}
+    <p>Cảm ơn bạn đã đăng ký tài khoản với chúng tôi.</p>
+    <p>Vui lòng nhấn vào nút bên dưới để xác thực địa chỉ email của bạn:</p>
+    <a class='button' href='{{verificationLink}}'>Xác thực tài khoản</a>
+    <p>Nếu bạn không tạo tài khoản, vui lòng bỏ qua email này.</p>
+</div>

@@ -7,14 +7,11 @@ import env from '@/app/env';
 import crypto from 'crypto';
 import { sendMail } from '@/lib/mailer';
 import otpGenerator from 'otp-generator';
+import { generateToken } from '@/lib/auth';
 
 export const loginHandle = async (email: string, password: string) => {
     return await query(async (prisma) => {
-        const user = await prisma.user.findFirst({
-            where: {
-                email
-            }
-        });
+        const user = await prisma.user.findFirst({ where: { email } });
         if (!user) throw new ErrorUnauthorized('Tài khoản không chính xác !');
         const isChecked = await verify(user.passwordHash, password, {
             secret: Buffer.from(env.ARGON_SECRET, 'hex')
@@ -45,13 +42,6 @@ export const registerHandle = async (email: string, password: string) => {
             salt,
             secret: Buffer.from(env.ARGON_SECRET, 'hex')
         });
-        const newUser = await prisma.user.create({
-            data: {
-                email,
-                passwordHash,
-                username: email.split('@')[0]
-            }
-        });
 
         // Create one time token for email verification
         const otp = otpGenerator.generate(6, {
@@ -60,17 +50,22 @@ export const registerHandle = async (email: string, password: string) => {
             specialChars: false
         });
 
-        sendMail('register', [email], {
-            name: newUser.fullName,
-            email: newUser.email,
-            confirmationLink: `${env.NEXT_PUBLIC_APP_URL}/verify/${newUser.id}`
+        const newUser = await prisma.user.create({
+            data: {
+                email,
+                passwordHash,
+                username: email.split('@')[0],
+                codeVerification: otp
+            }
         });
-        return newResponse(200, 'Đăng ký thành công !', {
-            id: newUser.id,
-            email: newUser.email,
-            name: newUser.fullName,
-            avatar: newUser.avatar,
-            role: newUser.role
+
+        const data = { name: newUser.fullName, email: newUser.email };
+        const token = await generateToken({ ...data, otp });
+        sendMail('register', ['anhnguyen.xmg@xuanmaijsc.vn'], {
+            ...data,
+            verificationLink: `${env.NEXT_PUBLIC_APP_URL}/verify/${token}`
         });
+
+        return newResponse(200, 'Đăng ký thành công !', null);
     });
 };

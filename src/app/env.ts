@@ -9,6 +9,7 @@ const envIntance = z
         MAIL_PASS: z.string(),
         MAIL_APP: z.string(),
         NEXT_PUBLIC_APP_URL: z.string(),
+        NEXT_PUBLIC_KEY: z.string(),
     })
     .safeParse(process.env);
 

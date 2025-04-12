@@ -39,27 +39,29 @@ enum EbookStatus {
 }
 
 model User {
-  id              String            @id @default(cuid())
-  username        String            @unique
-  email           String            @unique
-  passwordHash    String
-  fullName        String?
-  birthday        DateTime?
-  gender          String?
-  phone           String?           @unique
-  avatar          String?
-  role            Role              @default(reader)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @default(now())
-  author          Author?
-  readingHistory  ReadingHistory[]
-  downloads       Download[]
-  bookmarks       Bookmark[]
-  favorites       Favorite[]
-  reviews         Review[]
-  settings        ReadingSettings?
-  likes           EbookLike[]
-  follows         EbookFollow[]
+  id               String           @id @default(cuid())
+  username         String           @unique
+  email            String           @unique
+  passwordHash     String
+  fullName         String?
+  birthday         DateTime?
+  gender           String?
+  phone            String?          @unique
+  avatar           String?
+  codeVerification String?
+  verified         DateTime?
+  role             Role             @default(reader)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @default(now())
+  author           Author?
+  readingHistory   ReadingHistory[]
+  downloads        Download[]
+  bookmarks        Bookmark[]
+  favorites        Favorite[]
+  reviews          Review[]
+  settings         ReadingSettings?
+  likes            EbookLike[]
+  follows          EbookFollow[]
 }
 
 model Author {
@@ -69,45 +71,45 @@ model Author {
   bio       String?
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebooks    Ebook[]
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebooks Ebook[]
 }
 
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
+  id          String          @id @default(cuid())
+  name        String          @unique
+  slug        String          @unique
   description String?
   ebooks      EbookCategory[]
 }
 
 model Ebook {
-  id              String         @id @default(cuid())
-  slug            String         @unique
-  title           String
-  description     String?
-  summary         String?
-  authorId        String?
-  coverImage      String?
-  language        String?
-  source          String?
-  publishedDate   DateTime?
-  status          EbookStatus    @default(draft)
-  views           Int            @default(0)
-  createdAt       DateTime       @default(now())
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  title         String
+  description   String?
+  summary       String?
+  authorId      String?
+  coverImage    String?
+  language      String?
+  source        String?
+  publishedDate DateTime?
+  status        EbookStatus @default(draft)
+  views         Int         @default(0)
+  createdAt     DateTime    @default(now())
 
-  author          Author?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
-  categories      EbookCategory[]
-  formats         EbookFormat[]
-  series          EbookSeries[]
-  readingHistory  ReadingHistory[]
-  downloads       Download[]
-  bookmarks       Bookmark[]
-  favorites       Favorite[]
-  reviews         Review[]
-  likes           EbookLike[]
-  follows         EbookFollow[]
-  voices          Voice[]
+  author         Author?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  categories     EbookCategory[]
+  formats        EbookFormat[]
+  series         EbookSeries[]
+  readingHistory ReadingHistory[]
+  downloads      Download[]
+  bookmarks      Bookmark[]
+  favorites      Favorite[]
+  reviews        Review[]
+  likes          EbookLike[]
+  follows        EbookFollow[]
+  voices         Voice[]
 }
 
 model Voice {
@@ -117,27 +119,27 @@ model Voice {
   fileUrl   String
   createdAt DateTime @default(now())
 
-  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model EbookCategory {
-  id         String   @id @default(cuid())
+  id         String @id @default(cuid())
   ebookId    String
   categoryId String
 
-  ebook      Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  ebook    Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@unique([ebookId, categoryId])
 }
 
 model EbookFormat {
-  id       String  @id @default(cuid())
+  id       String @id @default(cuid())
   ebookId  String
   format   Format
   filePath String
 
-  ebook    Ebook  @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 
   @@unique([ebookId, format])
 }
@@ -150,13 +152,13 @@ model BookSeries {
 }
 
 model EbookSeries {
-  id           String   @id @default(cuid())
+  id           String @id @default(cuid())
   seriesId     String
   ebookId      String
   volumeNumber Int
 
-  series       BookSeries @relation(fields: [seriesId], references: [id], onDelete: Cascade)
-  ebook        Ebook      @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  series BookSeries @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  ebook  Ebook      @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model ReadingHistory {
@@ -168,8 +170,8 @@ model ReadingHistory {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook      Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model Download {
@@ -178,8 +180,8 @@ model Download {
   ebookId      String
   downloadedAt DateTime @default(now())
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook        Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model Bookmark {
@@ -190,8 +192,8 @@ model Bookmark {
   position  String?
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model Favorite {
@@ -200,8 +202,8 @@ model Favorite {
   ebookId   String
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model Review {
@@ -212,8 +214,8 @@ model Review {
   comment   String?
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 }
 
 model ReadingSettings {
@@ -226,7 +228,7 @@ model ReadingSettings {
   theme           String   @default("light")
   updatedAt       DateTime @default(now())
 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model EbookLike {
@@ -235,8 +237,8 @@ model EbookLike {
   ebookId   String
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 
   @@unique([userId, ebookId])
 }
@@ -247,8 +249,8 @@ model EbookFollow {
   ebookId   String
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ebook     Ebook    @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 
   @@unique([userId, ebookId])
 }
