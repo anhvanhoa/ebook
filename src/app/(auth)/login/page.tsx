@@ -3,7 +3,7 @@ import React from 'react';
 
 const page = () => {
     return (
-        <div className='max-w-screen-xs mx-auto mt-24 px-6'>
+        <div className='max-w-screen-xs mx-auto my-16 px-6'>
             <LoginForm />
         </div>
     );

@@ -29,6 +29,7 @@
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.2",
     "epubjs": "^0.3.93",
+    "express-handlebars": "^8.0.1",
     "jose": "^6.0.10",
     "jszip": "^3.10.1",
     "lucide-react": "^0.483.0",

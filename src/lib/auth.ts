@@ -1,7 +1,7 @@
 import env from '@/app/env';
 import { SignJWT, JWTPayload, jwtVerify } from 'jose';
 
-export const generateToken = async <T>(data?: { [key: string]: any } & T, expiration: string = '2h') => {
+export const generateToken = async <T>(data?: { [key: string]: unknown } & T, expiration: string = '2h') => {
     const secret = new TextEncoder().encode(env.NEXT_PUBLIC_KEY);
     const signJWT = new SignJWT(data)
         .setAudience(env.NEXT_PUBLIC_APP_URL)

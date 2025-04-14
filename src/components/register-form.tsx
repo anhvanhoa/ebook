@@ -12,6 +12,7 @@ import { useMutation } from '@tanstack/react-query';
 import { registerHandle } from '@/action/auth';
 import { toast } from 'sonner';
 import { Loader } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
     const form = useForm<FormSchemaRegister>({
@@ -29,6 +30,14 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
     const onSubmit = (values: FormSchemaRegister) => register.mutate(values);
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
+            {register.isSuccess && (
+                <Alert>
+                    <AlertDescription>
+                        Vui kiểm tra email của bạn để xác minh tài khoản. Nếu không thấy email, hãy kiểm tra thư mục
+                        spam hoặc thư rác của bạn.
+                    </AlertDescription>
+                </Alert>
+            )}
             <Card className='overflow-hidden p-0 shadow-none'>
                 <CardContent className='grid p-0'>
                     <Form {...form}>

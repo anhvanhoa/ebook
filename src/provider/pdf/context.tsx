@@ -18,13 +18,13 @@ export type TableContent = {
     label: string;
     href: string;
     children?: TableContent[];
-    onClick?: (...arg: any[]) => void;
+    onClick?: (...arg: unknown[]) => void;
 };
 
 export type BookMark = {
     label: string;
     href: string;
-    onClick?: (...arg: any[]) => void;
+    onClick?: (...arg: unknown[]) => void;
 };
 
 type EbookContextPage = {

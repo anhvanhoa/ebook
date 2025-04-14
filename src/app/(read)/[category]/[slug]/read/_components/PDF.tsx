@@ -1,7 +1,7 @@
 'use client';
 import 'core-js/full/promise/with-resolvers';
 import React from 'react';
-import { Document, Page, pdfjs, useDocumentContext } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css'; // Ẩn lớp chọn văn bản
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'; // Ẩn chú thích
 import Loading from './Loading';

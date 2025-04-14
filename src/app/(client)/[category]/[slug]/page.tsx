@@ -15,6 +15,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import Review from './_components/Review';
+import Comment from './_components/Comment';
 
 type DetailPageProps = {
     params: Promise<{ category: string; slug: string }>;
@@ -114,7 +116,7 @@ const DetailPage = async (props: DetailPageProps) => {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
                                                 {ebook.voices.map((voice) => (
-                                                    <DropdownMenuItem>{voice.name}</DropdownMenuItem>
+                                                    <DropdownMenuItem key={voice.id}>{voice.name}</DropdownMenuItem>
                                                 ))}
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -164,10 +166,18 @@ const DetailPage = async (props: DetailPageProps) => {
                         )}
                         <div>
                             <h3 className='text-lg font-semibold uppercase'>Họp Chợ</h3>
-                            <div>
-                                {/* <Review /> */}
-                                <p className='text-sm text-center py-2 text-primary/60'>Đang phát triển</p>
+                            <div className='py-3'>
+                                <Review
+                                    comment={{
+                                        content: 'Sách hay quá, cảm ơn tác giả đã viết ra cuốn sách này',
+                                        id: '1',
+                                        name: 'Bùi Lon Di',
+                                        time: '1 giờ trước'
+                                    }}
+                                />
+                                {/* <p className='text-sm text-center py-2 text-primary/60'>Đang phát triển</p> */}
                             </div>
+                            <Comment />
                         </div>
                     </div>
                     <div className='col-span-1 mt-4 md:mt-0'>

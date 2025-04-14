@@ -1,29 +1,47 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Reply, User } from 'lucide-react';
+import Like from './Like';
 
-export default function Review() {
+type ReviewProps = {
+    comment: { id: string; name: string; time: string; content: string; avatar?: string };
+};
+
+export default function Review({ comment }: ReviewProps) {
     return (
-        <Card className='w-full border-none shadow-none py-3'>
-            <CardContent className='p-2'>
+        <Card className='w-full border-none shadow-none p-0'>
+            <CardContent className='p-4'>
                 <div className='space-y-3'>
                     <div className='flex items-center justify-between'>
                         <div className='flex items-center gap-2'>
-                            <Avatar className='h-10 w-10'>
-                                <AvatarImage src='/placeholder.svg?height=40&width=40' alt='Bùi Lon Di' />
-                                <AvatarFallback>BLD</AvatarFallback>
+                            <Avatar className='size-9'>
+                                <AvatarImage src={comment.avatar} alt='Bùi Lon Di' />
+                                <AvatarFallback className='flex items-center justify-center'>
+                                    <User size={16} className='stroke-gray-500' />
+                                </AvatarFallback>
                             </Avatar>
                             <div>
-                                <h3 className='font-medium text-sm'>Bùi Lon Di</h3>
+                                <h3 className='font-medium text-sm space-x-1'>
+                                    <span>{comment.name}</span>
+                                    <span>·</span>
+                                    <span className='text-rose-600 text-xs'>Tác giả</span>
+                                </h3>
                                 <div className='flex items-center gap-2 text-xs text-gray-500'>
-                                    <span>1 giờ trước</span>
+                                    <span>
+                                        {comment.time} - <span className='text-gray-400'>1 người thấy hữu ích</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <Button variant='ghost' className='h-8 w-8 rounded-full p-0 cursor-pointer'>
+                                <Reply />
+                            </Button>
+                            <Like />
+                        </div>
                     </div>
-                    <p className='text-sm text-gray-700'>
-                        Phim dở, ko có nội dung, hù ma cũng ko tốt, tạo hình ma ko rùng rợn, phim rất nhạt nhẽo, ko đáng
-                        tiền bỏ ra xem
-                    </p>
+                    <p className='text-sm text-gray-700'>{comment.content}</p>
                 </div>
             </CardContent>
         </Card>

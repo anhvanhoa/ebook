@@ -1,4 +1,4 @@
-export const newResponse = (status: number, message: string, data: any) => {
+export const newResponse = <T>(status: number, message: string, data: T) => {
     return {
         status,
         message,

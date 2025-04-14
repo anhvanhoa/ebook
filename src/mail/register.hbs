@@ -1,10 +1,6 @@
 <div>
-    {{#if name}}
-        <h4>Xin chào {{name}},</h4>
-    {{else}}
-        <h4>Xin chào {{email}},</h4>
-    {{/if}}
-    <p>Cảm ơn bạn đã đăng ký tài khoản với chúng tôi.</p>
+    <h4>Xin chào {{email}},</h4>
+    <p>Cảm ơn bạn đã đăng ký tài khoản với chúng tôi. Mail chỉ có hạn là 15 phút.</p>
     <p>Vui lòng nhấn vào nút bên dưới để xác thực địa chỉ email của bạn:</p>
     <a class='button' href='{{verificationLink}}'>Xác thực tài khoản</a>
     <p>Nếu bạn không tạo tài khoản, vui lòng bỏ qua email này.</p>

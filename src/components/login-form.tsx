@@ -12,17 +12,22 @@ import { useMutation } from '@tanstack/react-query';
 import { loginHandle } from '@/action/auth';
 import { toast } from 'sonner';
 import { Loader } from 'lucide-react';
+import { useLogin, UserApp } from '@/provider/user/context';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+    const router = useRouter();
     const form = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: defaultLogin
     });
-
+    const handleLogin = useLogin();
     const login = useMutation({
-        mutationFn: (data: FormSchema) => loginHandle(data.email, data.password),
+        mutationFn: (data: FormSchema) => loginHandle<UserApp>(data.email, data.password),
         onSuccess: (data) => {
             toast(data.message);
+            handleLogin(data.data);
+            router.push('/');
         },
         onError: (error) => toast(error.message)
     });
