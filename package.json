@@ -57,6 +57,7 @@
     "@types/otp-generator": "^4.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "epubjs": "^0.3.93",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "prisma": "6.6.0",

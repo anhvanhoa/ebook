@@ -28,7 +28,7 @@ transporter.use(
     })
 );
 
-export const sendMail = async (template: TemplateMailType, tos: string[], data?: any, attach?: Attachment[]) => {
+export const sendMail = async (template: TemplateMailType, tos: string[], data?: unknown, attach?: Attachment[]) => {
     const tpl = TemplateMail[template];
     if (!tpl) throw new Error('Template not found!');
     return await transporter.sendMail({

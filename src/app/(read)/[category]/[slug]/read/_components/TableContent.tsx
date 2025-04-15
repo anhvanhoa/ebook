@@ -10,7 +10,7 @@ type ItemProps = {
     onClick?: () => void;
 };
 
-const Item = ({ href, label, prefix, onClick }: ItemProps) => {
+const Item = ({ label, prefix, onClick }: ItemProps) => {
     return (
         <SheetClose asChild>
             <Button
@@ -34,7 +34,7 @@ const TableContent = ({ data, prefix = '' }: TableContentProps) => {
     return (
         <>
             {data.map((item, index) => {
-                let newPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`; // 1, 2, 3 -> 1.1, 1.2 -> 1.1.1, 1.1.2
+                const newPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`; // 1, 2, 3 -> 1.1, 1.2 -> 1.1.1, 1.1.2
 
                 if (!item.children) {
                     return (

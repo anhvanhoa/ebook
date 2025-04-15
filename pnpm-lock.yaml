@@ -147,6 +147,9 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.0.4(@types/react@19.0.12)
+      epubjs:
+        specifier: ^0.3.93
+        version: 0.3.93
       eslint:
         specifier: ^9
         version: 9.23.0(jiti@2.4.2)

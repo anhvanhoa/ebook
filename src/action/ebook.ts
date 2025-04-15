@@ -86,7 +86,7 @@ export const getEbookByCategory = async (category: string, record: number = 10, 
         };
     });
 
-export const getEbookPageDetail = async ({ category, slug }: { slug: string; category: string }) =>
+export const getEbookPageDetail = async ({ slug }: { slug: string; category: string }) =>
     query(async (prisma) => {
         return await prisma.ebook.findFirst({
             include: {

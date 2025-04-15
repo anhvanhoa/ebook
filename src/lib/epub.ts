@@ -1,5 +1,6 @@
 import { TableContent } from '@/provider/pdf/context';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const convertNavToTableContent = (navItems: any[], onClick: (href: string) => void): TableContent[] => {
     return navItems.map((item) => ({
         label: item.label.trim(),
@@ -28,6 +29,7 @@ export class Ref {
 }
 
 export async function convertToTableContent(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     items: any[],
     getPageIndex: (ref: Ref) => Promise<number>,
     onClick: (pageNumber: number) => void

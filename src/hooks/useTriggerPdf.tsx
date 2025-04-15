@@ -15,8 +15,8 @@ export const useTripleClickListener = ({ onClickLeft, onClickRight, ref }: Props
     const [rightClickCount, setRightClickCount] = useState(0);
     const [lastClickTime, setLastClickTime] = useState(0);
     const [lastSide, setLastSide] = useState<Side | null>(null);
-    if (!ref) return;
     useEffect(() => {
+        if (!ref) return;
         const handleClick = (e: MouseEvent) => {
             if (!ref.current?.contains(e.target as Node)) return; // Chỉ xử lý trong div
 
@@ -56,7 +56,7 @@ export const useTripleClickListener = ({ onClickLeft, onClickRight, ref }: Props
         return () => {
             container?.removeEventListener('click', handleClick);
         };
-    }, [leftClickCount, rightClickCount, lastClickTime, lastSide, onClickLeft, onClickRight]);
+    }, [leftClickCount, rightClickCount, lastClickTime, lastSide, onClickLeft, onClickRight, ref]);
 };
 
 export const useArrowKeyListener = ({ onClickLeft, onClickRight }: Props = {}) => {
@@ -145,7 +145,7 @@ export const useDoubleRightClick = (
                 clearTimeout(timer.current);
             }
         };
-    }, [callback, delay]);
+    }, [callback, delay, ref]);
 };
 
 export const useResize = (callback: () => void) => {
