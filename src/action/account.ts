@@ -23,3 +23,10 @@ export const getProfile = async () => {
         return newResponse(200, 'Lấy thông tin tài khoản thành công !', data);
     });
 };
+
+export const verifyTokenUser = async () => {
+    const at = (await cookies()).get('at');
+    if (!at) throw new ErrorUnauthorized('Vui lòng đăng nhập !');
+    const user = await verifyToken<UserPayload>(at.value);
+    return user;
+}

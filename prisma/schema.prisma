@@ -37,6 +37,12 @@ enum EbookStatus {
   archived
 }
 
+// Enum cho các trạng thái của review
+enum ReviewStatus {
+  active
+  inactive
+}
+
 model User {
   id               String           @id @default(cuid())
   username         String           @unique
@@ -61,6 +67,7 @@ model User {
   settings         ReadingSettings?
   likes            EbookLike[]
   follows          EbookFollow[]
+  ReviewLike       ReviewLike[]
 }
 
 model Author {
@@ -206,15 +213,22 @@ model Favorite {
 }
 
 model Review {
-  id        String   @id @default(cuid())
+  id        String       @id @default(cuid())
   userId    String
   ebookId   String
-  rating    Int
+  rating    Int?
   comment   String?
-  createdAt DateTime @default(now())
+  parentId  String? // <-- đây là điểm mới
+  status    ReviewStatus @default(active)
+  createdAt DateTime     @default(now())
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+
+  parent  Review?  @relation("ReplyToReview", fields: [parentId], references: [id])
+  replies Review[] @relation("ReplyToReview")
+
+  likes ReviewLike[] // Like cho review này
 }
 
 model ReadingSettings {
@@ -252,4 +266,16 @@ model EbookFollow {
   ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
 
   @@unique([userId, ebookId])
+}
+
+model ReviewLike {
+  id        String   @id @default(cuid())
+  userId    String
+  reviewId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, reviewId])
 }
