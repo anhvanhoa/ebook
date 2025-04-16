@@ -1,9 +1,10 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import Review from './Review';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getReviews } from '@/action/review';
 import SkeletonReview from './SkeletonReview';
+import { useUser } from '@/provider/user/context';
 
 type ReviewProps = {
     slug: string;
@@ -11,6 +12,7 @@ type ReviewProps = {
 
 const Reviews = ({ slug }: ReviewProps) => {
     const loadMoreRef = useRef(null);
+    const user = useUser();
     const { data, hasNextPage, fetchNextPage, isLoading } = useInfiniteQuery({
         queryKey: ['reviews', slug],
         queryFn: ({ pageParam = 1 }) => getReviews(slug, 10, pageParam),
@@ -27,6 +29,13 @@ const Reviews = ({ slug }: ReviewProps) => {
         if (loadMoreRef.current) observer.observe(loadMoreRef.current);
         return () => observer.disconnect();
     }, [fetchNextPage, hasNextPage, data]);
+    const reply = <T extends Record<string, string>>(id: string | null, r: T) => {
+        if (id === null) return;
+        return {
+            id,
+            ...r
+        };
+    };
     return (
         <div className='py-3'>
             {isLoading && <SkeletonReview />}
@@ -39,12 +48,17 @@ const Reviews = ({ slug }: ReviewProps) => {
                                 comment={{
                                     content: item!.comment ?? '',
                                     id: item.id,
-                                    name: item.user.fullName ?? item.user.email,
+                                    name: item.user.fullName ?? item.user.username,
                                     avatar: item.user.avatar,
                                     time: item.createdAt.toString(),
                                     isAuthor: item.user.author?.id === item.ebook.authorId,
-                                    numberOfLikes: item.likes.length
+                                    numberOfLikes: item.likes.length,
+                                    reply: reply(item.parentId, {
+                                        content: item.parent?.comment ?? '',
+                                        name: item.parent?.user.fullName ?? item.parent?.user.username ?? ''
+                                    }),
                                 }}
+                                isLiked={item.likes.some((like) => like.userId === user.id)}
                             />
                         );
                     })

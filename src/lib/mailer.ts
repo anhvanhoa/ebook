@@ -45,6 +45,14 @@ const TemplateMail = {
     register: {
         subject: 'Xác thực tài khoản Ebook App',
         template: 'register'
+    },
+    review: {
+        subject: 'Có bình luận mới trên Ebook của bạn',
+        template: 'review'
+    },
+    prompt: {
+        subject: 'Nhắc tên trên Ebook', // + nameEbook,
+        template: 'review'
     }
 };
 
