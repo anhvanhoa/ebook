@@ -1,7 +1,10 @@
 'use server';
 import { query } from '@/lib/prisma-client';
-export const getEbookHome = async (record: number = 10, page: number = 1) =>
-    query(async (prisma) => {
+import { verifyTokenUser } from './account';
+import { newResponse } from '@/lib/response';
+
+export const getEbookHome = async (record: number = 10, page: number = 1) => {
+    return query(async (prisma) => {
         const [ebooks, total] = await prisma.$transaction([
             prisma.ebook.findMany({
                 include: {
@@ -39,9 +42,10 @@ export const getEbookHome = async (record: number = 10, page: number = 1) =>
             prevPage: page > 1 ? page - 1 : null
         };
     });
+};
 
-export const getEbookByCategory = async (category: string, record: number = 10, page: number = 1) =>
-    query(async (prisma) => {
+export const getEbookByCategory = async (category: string, record: number = 10, page: number = 1) => {
+    return query(async (prisma) => {
         const [ebooks, total] = await prisma.$transaction([
             prisma.ebook.findMany({
                 include: {
@@ -85,9 +89,10 @@ export const getEbookByCategory = async (category: string, record: number = 10, 
             prevPage: page > 1 ? page - 1 : null
         };
     });
+};
 
-export const getEbookPageDetail = async ({ slug }: { slug: string; category: string }) =>
-    query(async (prisma) => {
+export const getEbookPageDetail = async ({ slug }: { slug: string; category: string }) => {
+    return query(async (prisma) => {
         return await prisma.ebook.findFirst({
             include: {
                 categories: {
@@ -110,6 +115,7 @@ export const getEbookPageDetail = async ({ slug }: { slug: string; category: str
             }
         });
     });
+};
 
 export const getEbookSuggestion = async (slugs: string[]) => {
     const ebooks = await query(async (prisma) => {
@@ -255,4 +261,56 @@ export const getEbookSuggestion = async (slugs: string[]) => {
         return [];
     });
     return ebooks;
+};
+
+export const likeEbook = async (id: string) => {
+    return await query(async (prisma) => {
+        const user = await verifyTokenUser();
+        const ebook = await prisma.ebookLike.create({
+            data: {
+                ebookId: id,
+                userId: user.id
+            }
+        });
+        return newResponse(201, 'Thích sách thành công', { id: ebook.id });
+    });
+};
+
+export const unlikeEbook = async (id: string) => {
+    return await query(async (prisma) => {
+        const user = await verifyTokenUser();
+        await prisma.ebookLike.deleteMany({
+            where: {
+                ebookId: id,
+                userId: user.id
+            }
+        });
+        return newResponse(201, 'Bỏ thích sách thành công', { id });
+    });
+};
+
+export const followEbook = async (id: string) => {
+    return await query(async (prisma) => {
+        const user = await verifyTokenUser();
+        const ebook = await prisma.ebookFollow.create({
+            data: {
+                ebookId: id,
+                userId: user.id
+            }
+        });
+        return newResponse(201, 'Theo dõi sách thành công', { id: ebook.id });
+    });
+};
+
+export const unfollowEbook = async (id: string) => {
+    return await query(async (prisma) => {
+        const user = await verifyTokenUser();
+        await prisma.ebookFollow.deleteMany({
+            where: {
+                ebookId: id,
+                userId: user.id
+            }
+        });
+        return newResponse(201, 'Bỏ theo dõi sách thành công', { id });
+    });
 };

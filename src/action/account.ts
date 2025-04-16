@@ -29,4 +29,30 @@ export const verifyTokenUser = async () => {
     if (!at) throw new ErrorUnauthorized('Vui lòng đăng nhập !');
     const user = await verifyToken<UserPayload>(at.value);
     return user;
-}
+};
+
+export const addFavorite = async (id: string) => {
+    const user = await verifyTokenUser();
+    return await query(async (p) => {
+        const data = await p.favorite.create({
+            data: {
+                ebookId: id,
+                userId: user.id
+            }
+        });
+        return newResponse(200, 'Thêm vào yêu thích thành công !', { id: data.id });
+    });
+};
+
+export const removeFavorite = async (id: string) => {
+    const user = await verifyTokenUser();
+    return await query(async (p) => {
+        await p.favorite.deleteMany({
+            where: {
+                ebookId: id,
+                userId: user.id
+            }
+        });
+        return newResponse(200, 'Xóa khỏi yêu thích thành công !', { id });
+    });
+};

@@ -1,5 +1,3 @@
-import { Button } from '@/components/ui/button';
-import { BookOpen, ChevronDown, Play } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 import Ebook from './_components/Ebook';
@@ -9,15 +7,10 @@ import images from '@/asset/images';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import Comment from './_components/Comment';
 import Reviews from '@/components/review/Reviews';
 import ReviewProvider from '@/provider/review';
+import GroupBtn from './_components/GroupBtn';
 
 type DetailPageProps = {
     params: Promise<{ category: string; slug: string }>;
@@ -93,36 +86,13 @@ const DetailPage = async (props: DetailPageProps) => {
                                         <p className='font-semibold mt-1'>{ebook.source ?? 'Không xác định'}</p>
                                     </div>
                                 </div>
-                                <div className='mt-5 flex gap-4'>
-                                    <Link href={`/${params.category}/${params.slug}/read`}>
-                                        <Button
-                                            variant={'outline'}
-                                            className='text-xs sm:text-sm border-pink-600 bg-pink-600 hover:bg-pink-600/90 hover:text-white px-8 rounded-full cursor-pointer'
-                                        >
-                                            <BookOpen />
-                                            Đọc ngay
-                                        </Button>
-                                    </Link>
-                                    {ebook.voices.length !== 0 && (
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant={'outline'}
-                                                    className='text-xs sm:text-sm border-white bg-transparent px-8 rounded-full cursor-pointer'
-                                                >
-                                                    <Play />
-                                                    Nghe sách
-                                                    <ChevronDown className='size-3' />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                {ebook.voices.map((voice) => (
-                                                    <DropdownMenuItem key={voice.id}>{voice.name}</DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    )}
-                                </div>
+                                <GroupBtn
+                                    likes={ebook.likes}
+                                    follows={ebook.follows}
+                                    voices={ebook.voices}
+                                    params={params}
+                                    idEbook={ebook.id}
+                                />
                             </div>
                         </div>
                     </div>

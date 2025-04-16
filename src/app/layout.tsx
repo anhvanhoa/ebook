@@ -6,6 +6,7 @@ import AppContext from './app-context';
 import { Toaster } from '@/components/ui/sonner';
 import UserProvider from '@/provider/user';
 import accountApi from '@/api/account';
+import Audio from '@/components/controll/AudioPlayer';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -25,6 +26,7 @@ export default async function RootLayout({
                     <body className={`${geistSans.variable} ${geistMono.variable}`}>
                         <ThemeProvider attribute='class' defaultTheme='light'>
                             {children}
+                            <Audio />
                             <Toaster />
                         </ThemeProvider>
                     </body>
