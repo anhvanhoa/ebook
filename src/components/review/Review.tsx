@@ -28,9 +28,10 @@ type ReviewProps = {
         };
     };
     isLiked?: boolean;
+    className?: string;
 };
 const MaxLength = 200;
-export default function Review({ comment, isLiked }: ReviewProps) {
+export default function Review({ comment, isLiked, className }: ReviewProps) {
     const { setReview } = useReviewContext();
     const [liked, setLiked] = React.useState({
         isLiked,
@@ -88,14 +89,13 @@ export default function Review({ comment, isLiked }: ReviewProps) {
         handleLikeDebounce(comment.id);
     };
     return (
-        <div>
-            <Card
-                id={`review-${comment.id}`}
-                className={cn('w-full border-none shadow-none p-0', {
-                    'pl-4': comment.reply
-                })}
-            >
-                <CardContent className='p-4'>
+        <div
+            className={cn({
+                'pl-4': comment.reply
+            })}
+        >
+            <Card className={cn('w-full border-none shadow-none p-0', className)}>
+                <CardContent className='p-3'>
                     <div className='space-y-3'>
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-2'>

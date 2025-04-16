@@ -7,51 +7,75 @@ import { buildSortedComments } from '@/lib/helper';
 import { newResponse } from '@/lib/response';
 import { sendMail } from '@/lib/mailer';
 
+import { Prisma } from '@prisma/client';
+
+type ReviewWithIncludes = Prisma.ReviewGetPayload<typeof reviewWithIncludes>;
+const reviewWithIncludes = Prisma.validator<Prisma.ReviewDefaultArgs>()({
+    include: {
+        user: { include: { author: true } },
+        ebook: true,
+        likes: true,
+        parent: { include: { user: true } }
+    }
+});
+
 export const getReviews = async (
     slug: string,
     record: number = 10,
     page: number = 1,
+    ids: string[] = [],
+    excludeIds: string[] = [],
     status: ReviewStatus = ReviewStatus.ACTIVE
 ) =>
     query(async (prisma) => {
-        const [reviews, total] = await prisma.$transaction([
-            prisma.review.findMany({
+        const whereBase = {
+            ebook: { slug },
+            status
+        };
+
+        // 1. Lấy các review theo id nếu có
+        let reviewInIds: ReviewWithIncludes[] = [];
+        if (ids.length > 0) {
+            reviewInIds = await prisma.review.findMany({
+                where: {
+                    ...whereBase,
+                    id: { in: ids }
+                },
+                include: reviewWithIncludes.include
+            });
+        }
+
+        // ✅ Gộp excludeIds từ tham số và các id đã lấy
+        const combinedExcludeIds = [...new Set([...excludeIds, ...reviewInIds.map((r) => r.id)])];
+
+        const remainingToTake = record - reviewInIds.length;
+
+        // 2. Lấy các review khác để đủ số lượng
+        let reviewOthers: typeof reviewInIds = [];
+        if (remainingToTake > 0) {
+            reviewOthers = await prisma.review.findMany({
+                where: {
+                    ...whereBase,
+                    id: { notIn: combinedExcludeIds }
+                },
+                orderBy: { createdAt: 'desc' },
+                skip: (page - 1) * record,
+                take: remainingToTake,
                 include: {
-                    user: {
-                        include: { author: true }
-                    },
+                    user: { include: { author: true } },
                     ebook: true,
                     likes: true,
-                    parent: {
-                        include: {
-                            user: true
-                        }
-                    }
-                },
-                where: {
-                    ebook: {
-                        slug
-                    },
-                    status
-                },
-                orderBy: {
-                    createdAt: 'desc'
-                },
-                skip: (page - 1) * record,
-                take: record
-            }),
-            prisma.review.count({
-                where: {
-                    ebook: {
-                        slug
-                    },
-                    status
+                    parent: { include: { user: true } }
                 }
-            })
-        ]);
-        const totalPages = Math.ceil(total / 10);
+            });
+        }
+
+        const allReviews = [...reviewInIds, ...reviewOthers];
+        const total = await prisma.review.count({ where: whereBase });
+        const totalPages = Math.ceil(total / record);
+
         return {
-            data: buildSortedComments(reviews),
+            data: buildSortedComments(allReviews),
             total,
             totalPages,
             currentPage: page,
@@ -93,9 +117,8 @@ export const createReview = async (data: ReviewContext) => {
             commenterName: review.user.fullName || review.user.username,
             bookTitle: review.ebook.title,
             commentContent: review.comment,
-            commentLink: `${process.env.NEXT_PUBLIC_APP_URL}/${category.category.slug}/${review.ebook.slug}#review-${review.id}`
+            commentLink: `${process.env.NEXT_PUBLIC_APP_URL}/${category.category.slug}/${review.ebook.slug}?review=${review.id}`
         };
-        console.log(review.ebook.author?.user.email !== user.email, "emailAuthor");
         if (emailAuthor && review.ebook.author?.user.email !== user.email)
             sendMail('review', [emailAuthor], {
                 recipientName: review.ebook.author?.penName || 'Bạn',
@@ -137,7 +160,7 @@ export const likeReview = async (id: string) => {
 export const unlikeReview = async (id: string) => {
     return await query(async (prisma) => {
         const user = await verifyTokenUser();
-        const review = await prisma.reviewLike.deleteMany({
+        await prisma.reviewLike.deleteMany({
             where: {
                 reviewId: id,
                 userId: user.id
