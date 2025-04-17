@@ -11,13 +11,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { BookOpen, Heart, UserPlus } from 'lucide-react';
 import Link from 'next/link';
-import { useMutation } from '@tanstack/react-query';
-import { followEbook, likeEbook, unfollowEbook, unlikeEbook } from '@/action/ebook';
 import { cn } from '@/lib/utils';
-import { useDebouncedCallback } from 'use-debounce';
 import { EbookFollow, EbookLike, Voice } from '@prisma/client';
 import { useUser } from '@/provider/user/context';
-import { useRouter } from 'next/navigation';
+import useLikeEbook from '@/hooks/uselikeEbook';
+import useFollowEbook from '@/hooks/useFollowEbook';
+import useFavoriteEbook from '@/hooks/useFavoriteEbook';
+import useVoiceEbook from '@/hooks/useVoiceEbook';
 
 type GroupBtnProps = {
     params: {
@@ -28,72 +28,21 @@ type GroupBtnProps = {
     idEbook: string;
     likes: EbookLike[];
     follows: EbookFollow[];
+    isFavorite?: boolean;
 };
 
-const GroupBtn = ({ voices, params, idEbook, likes, follows }: GroupBtnProps) => {
+const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: GroupBtnProps) => {
     const user = useUser();
-    const router = useRouter();
-    const [group, setGroup] = React.useState(() => {
-        const liked = likes.some((l) => l.userId === user.id);
-        const followed = follows.some((f) => f.userId === user.id);
-        return {
-            liked: liked,
-            stateLike: liked,
-            followed: followed,
-            stateFollow: followed,
-            favorite: false,
-            stateFavorite: false
-        };
-    });
-    const likeBook = useMutation({
-        mutationFn: (id: string) => {
-            if (group.liked) return unlikeEbook(id);
-            return likeEbook(id);
-        },
-        onSuccess: () => {
-            if (group.liked) setGroup((prev) => ({ ...prev, liked: false }));
-            if (!group.liked) setGroup((prev) => ({ ...prev, liked: true }));
-            router.refresh();
-        },
-        onError: (e) => console.error(e)
-    });
-
-    const followBook = useMutation({
-        mutationFn: (id: string) => {
-            if (group.followed) return unfollowEbook(id);
-            return followEbook(id);
-        },
-        onSuccess: () => {
-            if (group.followed) setGroup((prev) => ({ ...prev, followed: false }));
-            if (!group.followed) setGroup((prev) => ({ ...prev, followed: true }));
-            router.refresh();
-        },
-        onError: (e) => console.error(e)
-    });
-
-    const likeDebounce = useDebouncedCallback((id: string) => {
-        if (group.stateLike !== group.liked) likeBook.mutate(id);
-    }, 500);
-
-    const followDebounce = useDebouncedCallback((id: string) => {
-        if (group.stateFollow !== group.followed) followBook.mutate(id);
-    }, 500);
-
-    const handleLike = () => {
-        setGroup((prev) => ({ ...prev, stateLike: !prev.stateLike }));
-        likeDebounce(idEbook);
-    };
-
-    const handleFollow = () => {
-        setGroup((prev) => ({ ...prev, stateFollow: !prev.stateFollow }));
-        followDebounce(idEbook);
-    };
-
-    const handleFavorite = () => {
-        setGroup((prev) => ({ ...prev, favorite: !prev.favorite }));
-        // likeDebounce(idEbook);
-    };
-
+    const { handleLike, stateLike } = useLikeEbook(
+        idEbook,
+        likes.some((l) => l.userId === user.id)
+    );
+    const { handleFollow, stateFollow } = useFollowEbook(
+        idEbook,
+        follows.some((f) => f.userId === user.id)
+    );
+    const { stateFavorite, handleFavorite } = useFavoriteEbook(idEbook, isFavorite);
+    const handleVoice = useVoiceEbook(params.slug);
     return (
         <div className='mt-5 flex gap-x-3'>
             <Link href={`/${params.category}/${params.slug}/read`}>
@@ -117,7 +66,11 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows }: GroupBtnProps) =>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className='rounded-3xl'>
                         {voices.map((voice) => (
-                            <DropdownMenuItem className='text-xs rounded-3xl py-1' key={voice.id}>
+                            <DropdownMenuItem
+                                onClick={() => handleVoice(voice)}
+                                className='text-xs rounded-3xl py-1'
+                                key={voice.id}
+                            >
                                 {voice.name}
                             </DropdownMenuItem>
                         ))}
@@ -129,21 +82,21 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows }: GroupBtnProps) =>
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <BiSolidLike className={cn({ 'fill-rose-500': group.stateLike })} />
+                <BiSolidLike className={cn({ 'fill-rose-500': stateLike })} />
             </Button>
             <Button
                 onClick={handleFollow}
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <UserPlus className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': group.stateFollow })} />
+                <UserPlus className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': stateFollow })} />
             </Button>
             <Button
                 onClick={handleFavorite}
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <Heart className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': group.favorite })} />
+                <Heart className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': stateFavorite })} />
             </Button>
         </div>
     );

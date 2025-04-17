@@ -17,7 +17,7 @@ export const userDefault: UserContext['user'] = {
     id: '',
     name: '',
     email: '',
-    avatarUrl: ''
+    avatarUrl: '',
 };
 
 export const UserContext = React.createContext<UserContext | null>(null);

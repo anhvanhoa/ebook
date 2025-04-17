@@ -2,6 +2,8 @@
 import { query } from '@/lib/prisma-client';
 import { verifyTokenUser } from './account';
 import { newResponse } from '@/lib/response';
+import { cookies } from 'next/headers';
+import { ErrorNotFound } from '@/lib/error';
 
 export const getEbookHome = async (record: number = 10, page: number = 1) => {
     return query(async (prisma) => {
@@ -91,8 +93,8 @@ export const getEbookByCategory = async (category: string, record: number = 10, 
     });
 };
 
-export const getEbookPageDetail = async ({ slug }: { slug: string; category: string }) => {
-    return query(async (prisma) => {
+export const getEbookPageDetail = async ({ slug }: { slug: string }) => {
+    const ebook = await query(async (prisma) => {
         return await prisma.ebook.findFirst({
             include: {
                 categories: {
@@ -115,6 +117,19 @@ export const getEbookPageDetail = async ({ slug }: { slug: string; category: str
             }
         });
     });
+    if (!ebook) throw new ErrorNotFound('Không tìm thấy sách !');
+    const at = (await cookies()).get('at');
+    if (!at) return {...ebook, isFavorite: false };
+    const user = await verifyTokenUser();
+    const isFavorite = await query(async (prisma) => {
+        return await prisma.favorite.count({
+            where: {
+                ebookId: ebook.id,
+                userId: user.id
+            }
+        });
+    });
+    return { ...ebook, isFavorite: isFavorite > 0 };
 };
 
 export const getEbookSuggestion = async (slugs: string[]) => {

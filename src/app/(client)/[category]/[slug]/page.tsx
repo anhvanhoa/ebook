@@ -92,6 +92,7 @@ const DetailPage = async (props: DetailPageProps) => {
                                     voices={ebook.voices}
                                     params={params}
                                     idEbook={ebook.id}
+                                    isFavorite={ebook.isFavorite}
                                 />
                             </div>
                         </div>

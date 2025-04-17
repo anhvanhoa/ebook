@@ -1,14 +1,12 @@
 import Image from 'next/image';
 import React from 'react';
-import { Button } from '../ui/button';
 import { EllipsisVertical, Heart } from 'lucide-react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import { useAudio } from '@/provider/audio/context';
+import dynamic from 'next/dynamic';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+const Button = dynamic(() => import('@/components/ui/button').then((mod) => mod.Button), {
+    ssr: false
+});
 
 const InfoEbook = () => {
     const { audio } = useAudio();
@@ -29,26 +27,27 @@ const InfoEbook = () => {
             <div className='flex flex-col min-w-0 flex-1'>
                 <h3 className='text-sm font-semibold truncate'>{audio.ebook.title}</h3>
                 <p className='text-xs text-neutral-600 truncate'>
-                    {audio.ebook.author.penName} - {audio.ebook.categories.map((item) => item.name).join(', ')}
+                    {audio.ebook.author && <span>{audio.ebook.author.penName} - </span>}
+                    <span>{audio.ebook.categories.map((item) => item.name).join(', ')}</span>
                 </p>
             </div>
             <div className='space-x-1'>
                 <Button variant={'ghost'} className='size-8 !p-1 group cursor-pointer'>
                     <Heart className='transition fill-primary' />
                 </Button>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                <Popover>
+                    <PopoverTrigger asChild>
                         <Button variant={'ghost'} className='size-8 !p-1 group cursor-pointer focus-visible:ring-0'>
-                            <EllipsisVertical className='transition' />
+                            <EllipsisVertical className='transition fill-primary' />
                         </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem>Thích</DropdownMenuItem>
-                        <DropdownMenuItem>Theo dõi</DropdownMenuItem>
-                        <DropdownMenuItem>Sao chép liên kết</DropdownMenuItem>
-                        <DropdownMenuItem className='text-rose-500'>Báo cáo</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                    </PopoverTrigger>
+                    <PopoverContent className='rounded-xl w-32 p-1'>
+                        <p className='rounded-lg cursor-pointer px-3 py-1.5 text-xs hover:bg-muted'>Thích</p>
+                        <p className='rounded-lg cursor-pointer px-3 py-1.5 text-xs hover:bg-muted'>Theo dõi</p>
+                        <p className='rounded-lg cursor-pointer px-3 py-1.5 text-xs hover:bg-muted'>Chia sẻ</p>
+                        <p className='rounded-lg cursor-pointer px-3 py-1.5 text-xs hover:bg-muted'>Báo cáo</p>
+                    </PopoverContent>
+                </Popover>
             </div>
         </div>
     );
