@@ -1,7 +1,5 @@
 'use client';
 import React from 'react';
-import { BiSolidLike } from 'react-icons/bi';
-import { FaPlay } from 'react-icons/fa6';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,7 +7,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Heart, UserPlus } from 'lucide-react';
+import { BookOpen, Heart, PlayIcon, ThumbsUp, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { EbookFollow, EbookLike, Voice } from '@prisma/client';
@@ -61,7 +59,7 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: Group
                             variant={'secondary'}
                             className='text-xs sm:text-sm size-9 rounded-full cursor-pointer focus-visible:ring-0'
                         >
-                            <FaPlay />
+                            <PlayIcon />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className='rounded-3xl'>
@@ -82,21 +80,21 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: Group
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <BiSolidLike className={cn({ 'fill-rose-500': stateLike })} />
+                <ThumbsUp className={cn({ 'stroke-rose-500': stateLike })} />
             </Button>
             <Button
                 onClick={handleFollow}
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <UserPlus className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': stateFollow })} />
+                <UserPlus className={cn({ 'stroke-rose-500': stateFollow })} />
             </Button>
             <Button
                 onClick={handleFavorite}
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <Heart className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': stateFavorite })} />
+                <Heart className={cn({ 'stroke-rose-500 fill-rose-500': stateFavorite })} />
             </Button>
         </div>
     );
