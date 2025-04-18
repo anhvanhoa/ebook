@@ -8,6 +8,7 @@ import React, { useEffect } from 'react';
 interface EbookInterface extends Ebook {
     author?: Author | null;
     categories: Category[];
+    isFavorite?: boolean;
 }
 
 export type AudioContextType = {

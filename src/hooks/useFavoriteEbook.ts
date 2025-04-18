@@ -1,4 +1,5 @@
 import { addFavorite, removeFavorite } from '@/action/account';
+import { useSetAudio } from '@/provider/audio/context';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -6,6 +7,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const useFavoriteEbook = (idEbook: string, favorite?: boolean) => {
     const router = useRouter();
+    const setAudio = useSetAudio();
     const [state, setState] = React.useState({
         favorite: favorite,
         stateFavorite: favorite
@@ -29,6 +31,13 @@ const useFavoriteEbook = (idEbook: string, favorite?: boolean) => {
 
     const handleFavorite = () => {
         setState((prev) => ({ ...prev, stateFavorite: !prev.stateFavorite }));
+        setAudio((prev) => {
+            const ebook = prev.ebook ? { ...prev.ebook, isFavorite: !prev.ebook?.isFavorite } : undefined;
+            return {
+                ...prev,
+                ebook: ebook
+            };
+        });
         favoriteDebounce(idEbook);
     };
 

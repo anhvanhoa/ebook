@@ -203,13 +203,14 @@ model Bookmark {
 }
 
 model Favorite {
-  id        String   @id @default(cuid())
   userId    String
   ebookId   String
   createdAt DateTime @default(now())
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   ebook Ebook @relation(fields: [ebookId], references: [id], onDelete: Cascade)
+
+  @@id([userId, ebookId])
 }
 
 model Review {

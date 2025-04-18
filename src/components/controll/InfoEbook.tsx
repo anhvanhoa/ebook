@@ -4,12 +4,15 @@ import { EllipsisVertical, Heart } from 'lucide-react';
 import { useAudio } from '@/provider/audio/context';
 import dynamic from 'next/dynamic';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import useFavoriteEbook from '@/hooks/useFavoriteEbook';
 const Button = dynamic(() => import('@/components/ui/button').then((mod) => mod.Button), {
     ssr: false
 });
 
 const InfoEbook = () => {
     const { audio } = useAudio();
+    const { handleFavorite } = useFavoriteEbook(audio.ebook?.id ?? '');
     if (!audio.ebook) return <div className='flex items-center gap-4 w-1/4'></div>;
     return (
         <div className='flex items-center gap-4 w-1/4'>
@@ -32,8 +35,8 @@ const InfoEbook = () => {
                 </p>
             </div>
             <div className='space-x-1'>
-                <Button variant={'ghost'} className='size-8 !p-1 group cursor-pointer'>
-                    <Heart className='transition fill-primary' />
+                <Button onClick={handleFavorite} variant={'ghost'} className='size-8 !p-1 group cursor-pointer'>
+                    <Heart className={cn('fill-primary', { 'fill-rose-500 stroke-rose-500': audio.ebook.isFavorite })} />
                 </Button>
                 <Popover>
                     <PopoverTrigger asChild>
