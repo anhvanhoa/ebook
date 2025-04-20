@@ -41,7 +41,7 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: Group
         idEbook,
         follows.some((f) => f.userId === user.id)
     );
-    const { stateFavorite, handleFavorite } = useFavoriteEbook(idEbook, isFavorite);
+    const { favorite, handleFavorite } = useFavoriteEbook(idEbook, isFavorite);
     const handleVoice = useVoiceEbook(params.slug);
     return (
         <div className='mt-5 flex gap-x-3'>
@@ -96,7 +96,7 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: Group
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <Heart className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': stateFavorite })} />
+                <Heart className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': favorite.stateFavorite })} />
             </Button>
         </div>
     );

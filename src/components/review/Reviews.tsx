@@ -53,9 +53,7 @@ const Reviews = ({ slug }: ReviewProps) => {
                         return (
                             <Review
                                 key={item.id}
-                                className={cn({
-                                    'bg-blue-50': id === item.id
-                                })}
+                                className={cn({ 'bg-blue-50': id === item.id })}
                                 comment={{
                                     content: item!.comment ?? '',
                                     id: item.id,

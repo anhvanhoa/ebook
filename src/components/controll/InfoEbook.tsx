@@ -12,7 +12,7 @@ const Button = dynamic(() => import('@/components/ui/button').then((mod) => mod.
 
 const InfoEbook = () => {
     const { audio } = useAudio();
-    const { handleFavorite } = useFavoriteEbook(audio.ebook?.id ?? '');
+    const { handleFavorite, favorite } = useFavoriteEbook(audio.ebook?.id as string);
     if (!audio.ebook) return <div className='flex items-center gap-4 w-1/4'></div>;
     return (
         <div className='flex items-center gap-4 w-1/4'>
@@ -36,7 +36,7 @@ const InfoEbook = () => {
             </div>
             <div className='space-x-1'>
                 <Button onClick={handleFavorite} variant={'ghost'} className='size-8 !p-1 group cursor-pointer'>
-                    <Heart className={cn('fill-primary', { 'fill-rose-500 stroke-rose-500': audio.ebook.isFavorite })} />
+                    <Heart className={cn('fill-primary', { 'fill-rose-500 stroke-rose-500': favorite.stateFavorite })} />
                 </Button>
                 <Popover>
                     <PopoverTrigger asChild>

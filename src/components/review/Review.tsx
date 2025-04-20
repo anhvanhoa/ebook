@@ -94,7 +94,7 @@ export default function Review({ comment, isLiked, className }: ReviewProps) {
                 'pl-4': comment.reply
             })}
         >
-            <Card className={cn('w-full border-none shadow-none p-0', className)}>
+            <Card className={cn('bg-transparent w-full border-none shadow-none p-0', className)}>
                 <CardContent className='p-3'>
                     <div className='space-y-3'>
                         <div className='flex items-center justify-between'>

@@ -8,7 +8,6 @@ import React, { useEffect } from 'react';
 interface EbookInterface extends Ebook {
     author?: Author | null;
     categories: Category[];
-    isFavorite?: boolean;
 }
 
 export type AudioContextType = {
@@ -20,6 +19,10 @@ export type AudioContextType = {
         playlist: EbookInterface[];
         modePlay: 'repeat' | 'next' | 'none';
         isPlaying: boolean;
+        favorite: {
+            isFavorite: boolean;
+            stateFavorite: boolean;
+        };
     };
     setAudio: React.Dispatch<React.SetStateAction<AudioType>>;
 };
@@ -33,6 +36,10 @@ export const defaultAudio: AudioType = {
     isShowPlayer: false,
     modePlay: 'none',
     isPlaying: false,
+    favorite: {
+        isFavorite: false,
+        stateFavorite: false
+    }
 };
 const AudioProvider = (props: { children: React.ReactNode }) => {
     const [audio, setAudio] = React.useState<AudioType>(defaultAudio);
@@ -48,6 +55,10 @@ const AudioProvider = (props: { children: React.ReactNode }) => {
                 ebook: {
                     ...data,
                     categories: data.categories.map((item) => item.category)
+                },
+                stateFavorite: {
+                    isFavorite: data.isFavorite,
+                    stateFavorite: data.isFavorite,
                 }
             }));
         }
@@ -63,14 +74,14 @@ const AudioProvider = (props: { children: React.ReactNode }) => {
 export default AudioProvider;
 
 export const useAudio = () => {
-    const context = React.useContext(AudioContext);
+    const context = React.use(AudioContext);
     if (!context) {
         throw new Error('useAudio must be used within a AudioProvider');
     }
     return context;
 };
 export const useAudioState = () => {
-    const context = React.useContext(AudioContext);
+    const context = React.use(AudioContext);
     if (!context) {
         throw new Error('useAudioState must be used within a AudioProvider');
     }
@@ -78,7 +89,7 @@ export const useAudioState = () => {
 };
 
 export const useSetAudio = () => {
-    const context = React.useContext(AudioContext);
+    const context = React.use(AudioContext);
     if (!context) {
         throw new Error('useSetAudio must be used within a AudioProvider');
     }

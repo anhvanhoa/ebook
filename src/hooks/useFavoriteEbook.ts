@@ -1,47 +1,62 @@
 import { addFavorite, removeFavorite } from '@/action/account';
-import { useSetAudio } from '@/provider/audio/context';
+import { useAudio } from '@/provider/audio/context';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-const useFavoriteEbook = (idEbook: string, favorite?: boolean) => {
+const useFavoriteEbook = (idEbook: string, isFavorite: boolean = false) => {
     const router = useRouter();
-    const setAudio = useSetAudio();
-    const [state, setState] = React.useState({
-        favorite: favorite,
-        stateFavorite: favorite
-    });
+    const {
+        setAudio,
+        audio: { favorite }
+    } = useAudio();
+
     const favoriteBook = useMutation({
         mutationFn: (id: string) => {
-            if (state.favorite) return removeFavorite(id);
+            if (favorite?.isFavorite) return removeFavorite(id);
             return addFavorite(id);
         },
         onSuccess: () => {
-            if (state.favorite) setState((prev) => ({ ...prev, favorite: false }));
-            if (!state.favorite) setState((prev) => ({ ...prev, favorite: true }));
+            if (favorite?.isFavorite) {
+                setAudio((prev) => ({ ...prev, stateFavorite: { ...prev.favorite, isFavorite: false } }));
+            }
+            if (!favorite?.isFavorite) {
+                setAudio((prev) => ({ ...prev, stateFavorite: { ...prev.favorite, isFavorite: true } }));
+            }
             router.refresh();
         },
         onError: (e) => console.error(e)
     });
 
     const favoriteDebounce = useDebouncedCallback((id: string) => {
-        if (state.stateFavorite !== state.favorite) favoriteBook.mutate(id);
+        if (favorite?.stateFavorite !== favorite?.isFavorite) favoriteBook.mutate(id);
     }, 500);
 
     const handleFavorite = () => {
-        setState((prev) => ({ ...prev, stateFavorite: !prev.stateFavorite }));
         setAudio((prev) => {
-            const ebook = prev.ebook ? { ...prev.ebook, isFavorite: !prev.ebook?.isFavorite } : undefined;
             return {
                 ...prev,
-                ebook: ebook
+                favorite: {
+                    ...prev.favorite,
+                    stateFavorite: !prev.favorite.stateFavorite
+                }
             };
         });
         favoriteDebounce(idEbook);
     };
 
-    return { handleFavorite, ...state };
+    useEffect(() => {
+        setAudio((prev) => ({
+            ...prev,
+            favorite: {
+                isFavorite,
+                stateFavorite: isFavorite
+            }
+        }));
+    }, [isFavorite, setAudio]);
+
+    return { handleFavorite, favorite };
 };
 
 export default useFavoriteEbook;
