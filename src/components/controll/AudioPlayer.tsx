@@ -18,7 +18,7 @@ export default function AudioPlayer() {
                     viewType='audio'
                     streamType='on-demand'
                     autoPlay={audio.isPlaying}
-                    className='flex items-center justify-between max-w-screen-xl mx-auto space-x-4'
+                    className='flex items-center justify-between max-w-screen-2xl mx-auto space-x-4'
                 >
                     <MediaProvider />
                     <InfoEbook />
