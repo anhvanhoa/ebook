@@ -87,12 +87,15 @@ const DetailPage = async (props: DetailPageProps) => {
                                     </div>
                                 </div>
                                 <GroupBtn
-                                    likes={ebook.likes}
-                                    follows={ebook.follows}
                                     voices={ebook.voices}
                                     params={params}
-                                    idEbook={ebook.id}
                                     isFavorite={ebook.isFavorite}
+                                    isLike={ebook.isLike}
+                                    isFollow={ebook.isFollow}
+                                    ebook={{
+                                        ...ebook,
+                                        categories: ebook.categories.map((c) => c.category),
+                                    }}
                                 />
                             </div>
                         </div>

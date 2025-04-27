@@ -9,7 +9,7 @@ import { useAudio } from '@/provider/audio/context';
 export default function AudioPlayer() {
     const { audio } = useAudio();
     return (
-        <div className='flex flex-col w-full bg-primary-foreground/20 backdrop-blur-md fixed bottom-0 left-0 z-50 border-t'>
+        <div className='flex flex-col w-full bg-primary-foreground backdrop-blur-md fixed bottom-0 left-0 z-50'>
             <Close />
             <div className='w-full px-4 py-3'>
                 <MediaPlayer
@@ -18,7 +18,7 @@ export default function AudioPlayer() {
                     viewType='audio'
                     streamType='on-demand'
                     autoPlay={audio.isPlaying}
-                    className='flex items-center justify-between max-w-screen-2xl mx-auto'
+                    className='flex items-center justify-between max-w-screen-xl mx-auto space-x-4'
                 >
                     <MediaProvider />
                     <InfoEbook />

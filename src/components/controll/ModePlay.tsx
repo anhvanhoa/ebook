@@ -12,7 +12,7 @@ const ModePlay = () => {
     return (
         <Button onClick={handleLoop} variant={'ghost'} className='size-8 !p-1 group cursor-pointer'>
             {!loop && <Repeat />}
-            {loop && <Repeat1 />}
+            {loop && <Repeat1 className='stroke-primary' />}
         </Button>
     );
 };

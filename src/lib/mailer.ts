@@ -5,12 +5,12 @@ import { Attachment } from 'nodemailer/lib/mailer';
 import path from 'path';
 
 const transporter = nodemailer.createTransport({
-    host: env.MAIL_HOST,
-    port: env.MAIL_PORT,
+    host: env.NEXT_PUBLIC_MAIL_HOST,
+    port: env.NEXT_PUBLIC_MAIL_PORT,
     secure: false,
     auth: {
-        user: env.MAIL_USER,
-        pass: env.MAIL_PASS
+        user: env.NEXT_PUBLIC_MAIL_USER,
+        pass: env.NEXT_PUBLIC_MAIL_PASS
     }
 });
 
@@ -32,7 +32,7 @@ export const sendMail = async (template: TemplateMailType, tos: string[], data?:
     const tpl = TemplateMail[template];
     if (!tpl) throw new Error('Template not found!');
     return await transporter.sendMail({
-        from: `"${env.MAIL_APP}" <${env.MAIL_USER}>`,
+        from: `"${env.NEXT_PUBLIC_MAIL_APP}" <${env.NEXT_PUBLIC_MAIL_USER}>`,
         subject: tpl.subject,
         to: tos,
         template: tpl.template,

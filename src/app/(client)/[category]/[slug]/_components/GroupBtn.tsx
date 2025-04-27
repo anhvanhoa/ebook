@@ -10,12 +10,12 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Heart, PlayIcon, ThumbsUp, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { EbookFollow, EbookLike, Voice } from '@prisma/client';
-import { useUser } from '@/provider/user/context';
+import { Voice } from '@prisma/client';
 import useLikeEbook from '@/hooks/uselikeEbook';
 import useFollowEbook from '@/hooks/useFollowEbook';
 import useFavoriteEbook from '@/hooks/useFavoriteEbook';
 import useVoiceEbook from '@/hooks/useVoiceEbook';
+import { EbookInterface } from '@/provider/audio/context';
 
 type GroupBtnProps = {
     params: {
@@ -23,24 +23,17 @@ type GroupBtnProps = {
         slug: string;
     };
     voices: Voice[];
-    idEbook: string;
-    likes: EbookLike[];
-    follows: EbookFollow[];
     isFavorite?: boolean;
+    isLike?: boolean;
+    isFollow?: boolean;
+    ebook: EbookInterface;
 };
 
-const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: GroupBtnProps) => {
-    const user = useUser();
-    const { handleLike, stateLike } = useLikeEbook(
-        idEbook,
-        likes.some((l) => l.userId === user.id)
-    );
-    const { handleFollow, stateFollow } = useFollowEbook(
-        idEbook,
-        follows.some((f) => f.userId === user.id)
-    );
-    const { favorite, handleFavorite } = useFavoriteEbook(idEbook, isFavorite);
-    const handleVoice = useVoiceEbook(params.slug);
+const GroupBtn = ({ voices, params, isFollow, isLike, isFavorite, ebook }: GroupBtnProps) => {
+    const { handleLike, like } = useLikeEbook(ebook.id, isLike);
+    const { handleFollow, follow } = useFollowEbook(ebook.id, isFollow);
+    const { favorite, handleFavorite } = useFavoriteEbook(ebook.id, isFavorite);
+    const handleVoice = useVoiceEbook(ebook);
     return (
         <div className='mt-5 flex gap-x-3'>
             <Link href={`/${params.category}/${params.slug}/read`}>
@@ -80,21 +73,21 @@ const GroupBtn = ({ voices, params, idEbook, likes, follows, isFavorite }: Group
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <ThumbsUp className={cn({ 'stroke-rose-500': stateLike })} />
+                <ThumbsUp className={cn({ 'stroke-rose-500': like.stateLiked })} />
             </Button>
             <Button
                 onClick={handleFollow}
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <UserPlus className={cn({ 'stroke-rose-500': stateFollow })} />
+                <UserPlus className={cn({ 'stroke-rose-500': follow.stateFollowed })} />
             </Button>
             <Button
                 onClick={handleFavorite}
                 variant={'secondary'}
                 className='text-xs sm:text-sm size-9 rounded-full cursor-pointer'
             >
-                <Heart className={cn('fill-primary', { 'stroke-rose-500 fill-rose-500': favorite.stateFavorite })} />
+                <Heart className={cn('fill-current', { 'stroke-rose-500 fill-rose-500': favorite.stateFavorite })} />
             </Button>
         </div>
     );

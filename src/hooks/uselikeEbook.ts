@@ -1,37 +1,47 @@
 import { likeEbook, unlikeEbook } from '@/action/ebook';
+import { useAudio } from '@/provider/audio/context';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-const useLikeEbook = (idEbook: string, liked?: boolean) => {
-    const [state, setState] = React.useState({
-        liked: liked,
-        stateLike: liked
-    });
+const useLikeEbook = (idEbook: string, isLike: boolean = false) => {
+    const {
+        setAudio,
+        audio: { like }
+    } = useAudio();
     const router = useRouter();
     const likeBook = useMutation({
         mutationFn: (id: string) => {
-            if (state.liked) return unlikeEbook(id);
+            if (like.isLike) return unlikeEbook(id);
             return likeEbook(id);
         },
         onSuccess: () => {
-            if (state.liked) setState((prev) => ({ ...prev, liked: false }));
-            if (!state.liked) setState((prev) => ({ ...prev, liked: true }));
+            if (like.isLike) setAudio((prev) => ({ ...prev, like: { ...prev.like, isLike: false } }));
+            if (!like.isLike) setAudio((prev) => ({ ...prev, like: { ...prev.like, isLike: true } }));
             router.refresh();
         },
         onError: (e) => console.error(e)
     });
 
     const likeDebounce = useDebouncedCallback((id: string) => {
-        if (state.stateLike !== state.liked) likeBook.mutate(id);
+        if (like.stateLiked !== like.isLike) likeBook.mutate(id);
     }, 500);
 
     const handleLike = () => {
-        setState((prev) => ({ ...prev, stateLike: !prev.stateLike }));
+        setAudio((prev) => ({ ...prev, like: { ...prev.like, stateLiked: !prev.like.stateLiked } }));
         likeDebounce(idEbook);
     };
 
-    return { handleLike, ...state };
+    useEffect(() => {
+        setAudio((prev) => ({
+            ...prev,
+            like: {
+                isLike,
+                stateLiked: isLike
+            }
+        }));
+    }, [isLike, setAudio]);
+    return { handleLike, like };
 };
 export default useLikeEbook;

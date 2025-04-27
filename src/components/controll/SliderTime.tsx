@@ -21,7 +21,7 @@ const SliderTime = () => {
         setValue((time / duration) * 100);
     }, [time, duration, seeking]);
     return (
-        <div className='flex items-center gap-2 w-full max-w-xl'>
+        <div className='flex items-center gap-2 w-full'>
             <Time className='text-xs text-neutral-600 w-10 text-right' type='current' />
             <div className='flex-1 relative'>
                 <Slider
@@ -43,7 +43,7 @@ const SliderTime = () => {
                     className='flex flex-col items-center absolute opacity-0 data-[visible]:opacity-100 transition-opacity duration-200 will-change-[left] pointer-events-none'
                     ref={previewRef}
                 >
-                    <span className='text-xs text-blue-600'>{formatTime(previewTime)}</span>
+                    <span className='text-xs text-primary bg-primary-foreground px-1.5 shadow-2xl border py-0.5 rounded-md'>{formatTime(previewTime)}</span>
                 </div>
             </div>
             <Time className='text-xs text-neutral-600 w-10' type='duration' />

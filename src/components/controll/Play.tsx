@@ -9,14 +9,14 @@ const Play = () => {
     return (
         <div>
             <PlayButton asChild>
-                <Button disabled={isLoading} className='border size-10 cursor-pointer !bg-white dark:!bg-primary-foreground text-primary rounded-full p-2 hover:scale-105 transition'>
+                <Button disabled={isLoading} className='size-8 cursor-pointer !bg-white dark:!bg-primary-foreground text-primary rounded-full p-1 hover:scale-105 transition'>
                     {!isLoading && (
                         <>
-                            {isPaused && <PlayIcon size={24} className='fill-primary' />}
-                            {!isPaused && <Pause size={24} className='fill-primary' />}
+                            {isPaused && <PlayIcon size={20} className='fill-primary' />}
+                            {!isPaused && <Pause size={20} className='fill-primary' />}
                         </>
                     )}
-                    {isLoading && <Loader size={24} className='animate-spin' />}
+                    {isLoading && <Loader size={20} className='animate-spin' />}
                 </Button>
             </PlayButton>
         </div>

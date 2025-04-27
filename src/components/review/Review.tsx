@@ -151,7 +151,7 @@ export default function Review({ comment, isLiked, className }: ReviewProps) {
                                 </Button>
                             </div>
                         </div>
-                        <p className='text-sm text-gray-700'>
+                        <p className='text-sm text-gray-700 dark:text-gray-300'>
                             {comment.reply && (
                                 <span className='text-sm px-1 rounded-md text-rose-500 font-medium'>
                                     @{comment.reply.name}

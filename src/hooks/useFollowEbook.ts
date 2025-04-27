@@ -1,37 +1,47 @@
 import { followEbook, unfollowEbook } from '@/action/ebook';
+import { useAudio } from '@/provider/audio/context';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-const useFollowEbook = (idEbook: string, followed?: boolean) => {
+const useFollowEbook = (idEbook: string, idFollow: boolean = false) => {
     const router = useRouter();
-    const [state, setState] = React.useState({
-        followed: followed,
-        stateFollow: followed
-    });
+    const {
+        setAudio,
+        audio: { follow }
+    } = useAudio();
     const followBook = useMutation({
         mutationFn: (id: string) => {
-            if (state.followed) return unfollowEbook(id);
+            if (follow.isFollow) return unfollowEbook(id);
             return followEbook(id);
         },
         onSuccess: () => {
-            if (state.followed) setState((prev) => ({ ...prev, followed: false }));
-            if (!state.followed) setState((prev) => ({ ...prev, followed: true }));
+            if (follow.isFollow) setAudio((prev) => ({ ...prev, follow: { ...prev.follow, isFollow: false } }));
+            if (!follow.isFollow) setAudio((prev) => ({ ...prev, follow: { ...prev.follow, isFollow: true } }));
             router.refresh();
         },
         onError: (e) => console.error(e)
     });
     const followDebounce = useDebouncedCallback((id: string) => {
-        if (state.stateFollow !== state.followed) followBook.mutate(id);
+        if (follow.stateFollowed !== follow.isFollow) followBook.mutate(id);
     }, 500);
     const handleFollow = () => {
-        setState((prev) => ({ ...prev, stateFollow: !prev.stateFollow }));
+        setAudio((prev) => ({ ...prev, follow: { ...prev.follow, stateFollowed: !prev.follow.stateFollowed } }));
         followDebounce(idEbook);
     };
+    useEffect(() => {
+        setAudio((prev) => ({
+            ...prev,
+            follow: {
+                isFollow: idFollow,
+                stateFollowed: idFollow
+            }
+        }));
+    }, [idFollow, setAudio]);
     return {
         handleFollow,
-        ...state
+        follow
     };
 };
 

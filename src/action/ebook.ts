@@ -119,7 +119,7 @@ export const getEbookPageDetail = async ({ slug }: { slug: string }) => {
     });
     if (!ebook) throw new ErrorNotFound('Không tìm thấy sách !');
     const at = (await cookies()).get('at');
-    if (!at) return {...ebook, isFavorite: false };
+    if (!at) return { ...ebook, isFavorite: false, isLike: false, isFollow: false };
     const user = await verifyTokenUser();
     const isFavorite = await query(async (prisma) => {
         return await prisma.favorite.count({
@@ -129,7 +129,9 @@ export const getEbookPageDetail = async ({ slug }: { slug: string }) => {
             }
         });
     });
-    return { ...ebook, isFavorite: isFavorite > 0 };
+    const isLike = ebook.likes.some((like) => like.userId === user.id);
+    const isFollow = ebook.follows.some((follow) => follow.userId === user.id);
+    return { ...ebook, isFavorite: isFavorite > 0, isLike, isFollow };
 };
 
 export const getEbookSuggestion = async (slugs: string[]) => {
