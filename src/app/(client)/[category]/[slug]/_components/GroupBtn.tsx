@@ -7,8 +7,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Heart, PlayIcon, ThumbsUp, UserPlus } from 'lucide-react';
-import Link from 'next/link';
+import { EllipsisVertical, Heart, PlayIcon, ThumbsUp, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Voice } from '@prisma/client';
 import useLikeEbook from '@/hooks/uselikeEbook';
@@ -36,15 +35,21 @@ const GroupBtn = ({ voices, params, isFollow, isLike, isFavorite, ebook }: Group
     const handleVoice = useVoiceEbook(ebook);
     return (
         <div className='mt-5 flex gap-x-3'>
-            <Link href={`/${params.category}/${params.slug}/read`}>
+            <div className='flex'>
                 <Button
                     variant={'outline'}
-                    className='text-xs sm:text-sm border-pink-600 bg-pink-600 hover:bg-pink-600/90 hover:text-white px-8 rounded-full cursor-pointer'
+                    className='leading-2.5 px-6 rounded-s-full rounded-e-none text-xs sm:text-sm border-pink-600 bg-pink-600 hover:bg-pink-600/90 hover:text-white cursor-pointer'
                 >
-                    <BookOpen />
                     Đọc ngay
                 </Button>
-            </Link>
+                <span className='border-r border-muted/70'></span>
+                <Button
+                    variant={'outline'}
+                    className='rounded-e-full rounded-s-none text-xs sm:text-sm border-pink-600 bg-pink-600 hover:bg-pink-600/90 hover:text-white cursor-pointer'
+                >
+                    <EllipsisVertical />
+                </Button>
+            </div>
             {voices.length !== 0 && (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

@@ -15,7 +15,7 @@ export const loginHandle = async <T>(email: string, password: string) => {
         const user = await prisma.user.findFirst({ where: { email, verified: { not: null } } });
         if (!user) throw new ErrorUnauthorized('Tài khoản không chính xác !');
         const isChecked = await verify(user.passwordHash, password, {
-            secret: Buffer.from(env.ARGON_SECRET, 'hex')
+            secret: Buffer.from(env.NEXT_PUBLIC_ARGON_SECRET, 'hex')
         });
         if (!isChecked) throw new ErrorUnauthorized('Tài khoản không chính xác !');
         const data = {

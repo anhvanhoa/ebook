@@ -102,6 +102,7 @@ export const getEbookPageDetail = async ({ slug }: { slug: string }) => {
                         category: true
                     }
                 },
+                formats: true,
                 voices: true,
                 likes: true,
                 follows: true,

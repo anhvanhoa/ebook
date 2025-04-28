@@ -1,5 +1,6 @@
 import EbookProvider, { EbookContextPageState } from '@/provider/pdf/context';
 import Read from './Read';
+import apiEbook from '@/api/ebook';
 const stateDefault: Partial<EbookContextPageState> = {
     fileUrl: '/e.epub',
     // fileUrl: '/go-book.pdf',
@@ -84,7 +85,15 @@ const stateDefault: Partial<EbookContextPageState> = {
     //     }
     // ]
 };
-const EbookPage = () => {
+
+type DetailPageProps = {
+    params: Promise<{ category: string; slug: string }>;
+};
+
+const EbookPage = async (props: DetailPageProps) => {
+    const params = await props.params;
+    const ebook = await apiEbook.getEbookPageDetail(params);
+    console.log(ebook);
     return (
         <div>
             <EbookProvider init={stateDefault}>
